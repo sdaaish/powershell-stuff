@@ -9,8 +9,17 @@
 #>
 
 # Output-file
-#New-Item output-file.txt -type file
-Clear-Content output-file.txt
+if (!(Test-Path "output-file.txt"))
+{
+	New-Item output-file.txt -type file -value "Directory listing for xxx"
+	Write-Host "Created new file"
+}
+else
+{
+	Clear-Content output-file.txt
+	Add-Content output-file.txt -value "Directory listing for xxx"
+	Write-Host "File already existed, cleared the file"
+}
 
 # Set up an array with the directories
 [Array] $dirs = ${env:ProgramFiles} , ${env:ProgramFiles(x86)}, `
