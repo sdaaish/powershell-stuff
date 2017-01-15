@@ -13,7 +13,7 @@
 #>
 
 # Standard home dir
-Set-Location C:\
+Set-Location ($env:UserProfile)
 
 # Get info about current user
 $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
