@@ -45,9 +45,27 @@ else {
 }
 
 #Aliases
-New-Item alias:np -value C:\Windows\System32\notepad.exe
+New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
+Set-Alias -Name src -Value reload-powershell-profile
 
 # Clear terminal
 Clear-Host
 Write-Output "Hello ($name)!"
+
+#Functions
+function cdh {
+    Set-Location $Env:UserProfile\
+}
+function cdr {
+    Set-Location $Env:UserProfile\Repos
+}
+function cdw {
+    Set-Location $Env:UserProfile\Downloads
+}
+function cdv {
+    Set-Location $Env:UserProfile\Vagrantdir
+}
+function reload-powershell-profile {
+	. $profile
+}
