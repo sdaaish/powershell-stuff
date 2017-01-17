@@ -8,6 +8,10 @@
 	2017-01-17/SDAA
 #>
 
+param (
+    [string]$browser = "default"
+)
+
 function Set-DefaultBrowser
 {
     param($defaultBrowser)
@@ -60,19 +64,20 @@ function Set-DefaultBrowser
 # thanks to http://newoldthing.wordpress.com/2007/03/23/how-does-your-browsers-know-that-its-not-the-default-browser/
 # Errorhandling tips: https://blogs.technet.microsoft.com/heyscriptingguy/2015/04/03/catch-powershell-errors-related-to-reading-the-registry/
 
-# If there is no keys present, create them
-$ErrorActionPreference = "stop"
-try {
-    (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice').ProgId
+function create-reg-keys {
+    # If there is no keys present, create them
+    $ErrorActionPreference = "stop"
+    try {
+	(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice').ProgId
+    }
+    catch [System.Management.Automation.ItemNotFoundException] {
+	New-Item 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp' -force|Out-Null
+	New-Item 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice' -force|Out-Null
+    }
+    finally  {
+	$ErrorActionPreference = "Continue"
+    }
 }
-catch [System.Management.Automation.ItemNotFoundException] {
-    New-Item 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp' -force|Out-Null
-    New-Item 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice' -force|Out-Null
-}
-finally  {
-    $ErrorActionPreference = "Continue"
-}
-
     
 <#Try {
     (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice').ProgId
@@ -87,14 +92,12 @@ catch [System.Management.Automation.ItemNotFoundException] {
     New-Item $regKeyHttps
 }
 #>
-param (
-    [string]$browser = default
-)
-
 if ($browser -eq "default") {
     Write-Host "Usage: ./set-default-browser -browser <ff|ie|cr|op|sa>"
 }
 else {
+    Write-Host "In the else $browser"
+    create-reg-keys
     Set-DefaultBrowser $browser
 }
 
