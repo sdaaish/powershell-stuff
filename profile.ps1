@@ -57,3 +57,6 @@ function reload-powershell-profile {
 function show-profiles {
     $profile|Get-Member -MemberType NoteProperty
 }
+function show-colors {
+    [enum]::GetValues([System.ConsoleColor]) | Foreach-Object {Write-Host $_ -ForegroundColor $_}
+}
