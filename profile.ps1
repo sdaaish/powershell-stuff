@@ -33,6 +33,7 @@ else {
 New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
 Set-Alias -Name src -Value reload-powershell-profile
+Set-Alias -Name alias -Value Get-Alias
 
 # Clear terminal
 Clear-Host
