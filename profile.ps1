@@ -18,6 +18,9 @@
 # Standard home dir
 Set-Location ($env:UserProfile)
 
+# No bell sound
+Set-PSReadlineOption -BellStyle None
+
 # Get info about current user
 $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $name = ($id).Name
