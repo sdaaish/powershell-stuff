@@ -64,3 +64,6 @@ function show-profiles {
 function show-colors {
     [enum]::GetValues([System.ConsoleColor]) | Foreach-Object {Write-Host $_ -ForegroundColor $_}
 }
+function show-path {
+    $env:Path.split(";")
+}
