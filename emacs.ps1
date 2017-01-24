@@ -1,29 +1,30 @@
-# Script that tries to add "Emacs" as option in explorer "Open" contextual menu
+<#
+	.SYNOPSIS
+	Script that adds "Emacs" as option in explorer "Open" contextual menu
 
-#https://en.wikiversity.org/wiki/Windows_PowerShell/Registry
+	.DESCRIPTION
+	Requires Chocolatay and that emacs64 is installed. Otherwise change the URL for $emacs.
 
-<#(get-itemproperty -literalpath HKLM:\SOFTWARE\Classes\.txt).'(default)'
+	.NOTES
+	Problems and registry:
+	http://stackoverflow.com/questions/29267307/set-registry-key-to-open-notepad
 
-To create a default value :
-?
-New-ItemProperty -LiteralPath HKLM:\SOFTWARE\Classes\.txt -name '(Default)' -Value "txtfile"
+	Good Howto:
+	https://en.wikiversity.org/wiki/Windows_PowerShell/Registry
+#>	
 
-To set an existing default value :
-?
-Set-ItemProperty -LiteralPath HKLM:\SOFTWARE\Classes\.txt -name '(Default)' -Value "txtfile"
-#>
+# HKEY_CLASSES_ROOT is equal to HKLM:\Software\Classes
+$registryPath = 'HKLM:\Software\Classes\*\Shell\Emacs\Command'
+$emacs = "C:\ProgramData\chocolatey\bin\runemacs.exe `"%1`""
 
-$registryPath = 'HKLM:\Software\Classes\*\shell\Emacs\Command'
-
-if (!(Test-Path $registryPath)) {
+if (!(Test-Path -LiteralPath $registryPath)) {
     New-Item -Path $registryPath -Force |Out-Null
-    New-ItemProperty -LiteralPath $registryPath -Name "(default)" -value "c:\local\bin\runemacs.exe `"%1`"" -PropertyType string |OUT-Null
+    New-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $emacs -PropertyType string |OUT-Null
 }
 else {
-    New-ItemProperty -LiteralPath $registryPath -Name "(default)" -value "c:\local\bin\runemacs.exe `"%1`"" -PropertyType string -Force|OUT-Null
+    Set-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $emacs -Force|OUT-Null
 }
 
-<#
-(Get-ItemProperty -LiteralPath HKLM:\SOFTWARE\Classes\*\shell\Emacs\Command).'(default)'
-Set-ItemProperty -LiteralPath HKLM:\SOFTWARE\Classes\*\shell\Emacs\Command -name Test -value start -type string
-#>
+# Read the actual value
+Write-Host "New value for $registryPath.default is:"
+(Get-ItemProperty -LiteralPath $registryPath).'(default)'
