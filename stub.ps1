@@ -13,8 +13,8 @@
 	Put some notes here.
 
 	.LINK
+	https://github.com/sdaaish/powershell-stuff
 	http://kevinpelgrims.wordpress.com
-
 #>
 
 Write-Host ‘Hello World!’
