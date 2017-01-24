@@ -56,7 +56,7 @@ function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
 function reload-powershell-profile {
-	. $profile
+	. $profile.CurrentUserAllHosts
 }
 function show-profiles {
     $profile|Get-Member -MemberType NoteProperty
