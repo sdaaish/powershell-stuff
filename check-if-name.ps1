@@ -10,28 +10,44 @@
 	./
 
 	.NOTES
-	[system.net.dns]::GetHostByName is obsolete, but still works
-	GetHostByName still resolves local addresses
+	Need some better errorhandling
 
 	.LINK
 	
 	
 #>
 
-$hostname = [system.net.dns]::GetHostByName((hostname)).Hostname
+$hostname = ($env:ComputerName + "." + $env:UserDnsDomain).ToLower()
 $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
-Write-Output "Local hostname:`t`t$hostname`n"
+Write-Output "Local hostname =`t`t$hostname`n"
 
 # Get interfaces that are up and print there ip-address
 foreach  ($if in $interfaces) {
     $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
     $ifName = ($if).Name
     $ifIndex = ($if).ifIndex
-    Write-Output "Interface $ifName ($ifIndex) has address:`t$ipv4"
-    $dnshost = [System.net.dns]::getHostByAddress("$ipv4").HostName #Reverse lookup
-    Write-Output "DNS lookup for $ipv4 :`t`t$dnshost`n"
+    Write-Output "Interface $ifName ($ifIndex) has address =`t$ipv4"
+
+    # Check for the reverse recordin DNS
+    $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
+    if ($dnshost) {
+	Write-Output "Reverse lookup for $ipv4 =`t$dnshost"
+
+	# In case there is no name for dnshost
+	try {
+	    $revname = (Resolve-DnsName -Name $dnshost -DnsOnly -ErrorAction Stop).IpAddress #Forward Lookup
+	}
+	catch {
+	    Write-Output "No name for $ipv4"
+	    Break
+	}
+	finally {
+	    Write-Output "Forward lookup for $dnshost = $revname`n"
+	}
+    }
+    else {
+	# The ip-address has no record in DNS
+        Write-Output "No reverse lookup for $ipv4`n"
+    }
 }
 
-foreach ($address in [System.Net.Dns]::GetHostByName(($hostname)).Addresslist.IPAddressToString) {
-    Write-Output "DNS lookup for $hostname `t$address"
-}
