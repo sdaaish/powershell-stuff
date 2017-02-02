@@ -6,13 +6,15 @@
 
 	.NOTES	
         - Added initial stuff
+	- Only common stuff in this file for Console and ISE. Use profile_console and profile_ise for specific features
+
+	2017-01-12/SDAA
+
+	.LINKS
 	- From http://www.howtogeek.com/50236/customizing-your-powershell-profile/
 	- More info https://technet.microsoft.com/en-us/library/2008.10.windowspowershell.aspx
 	- And of course http://ss64.com/ps/syntax-profile.html
 	- https://www.interworks.com/blog/jpoehls/2011/03/25/scripting-tips-take-your-powershell-profile-everywhere-dropbox
-	- Only common stuff in this file for Console and ISE. Use profile_console and profile_ise for specific features
-
-	2017-01-12/SDAA
 #>
 
 # Standard home dir
@@ -33,14 +35,10 @@ else {
 }
 
 #Aliases
-New-Alias -Name np -Value C:\Windows\System32\notepad.exe
+#New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Get-Alias
-
-# Clear terminal
-Clear-Host
-Write-Output "Hello ($name)!"
 
 #Functions
 function cdh {
