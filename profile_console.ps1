@@ -31,3 +31,8 @@ $Host.PrivateData.WarningForegroundColor = "yellow"
 $Host.PrivateData.WarningBackgroundColor = "darkgreen"
 $Host.PrivateData.ErrorForegroundColor = "white"
 $Host.PrivateData.ErrorBackgroundColor = "red"
+
+# Clear terminal
+Clear-Host
+Write-Output "Hello ($name)!"
+
