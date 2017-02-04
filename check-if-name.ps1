@@ -1,7 +1,7 @@
 <#
 
 	.SYNOPSIS
-	Checks the ip-address and namefor active interfaces
+	Checks the ip-address and resolves name(s) for active interface(s)
 
 	.DESCRIPTION
 	Does a forward lookup for the hostname and a reverse lookup for the ip-addresses for active interfaces
@@ -10,7 +10,8 @@
 	./
 
 	.NOTES
-	Need some better errorhandling
+	Needs some better errorhandling
+	Needs better handling of multiple ip-addresses per interface and ipv6
 
 	.LINK
 	
@@ -18,24 +19,35 @@
 #>
 
 #$hostname = ($env:ComputerName + "." + $env:UserDnsDomain).ToLower()
-$hostname = (Get-CIMInstance CIM_ComputerSystem).Name.tolower()
-$primarydomain = (Get-CIMInstance CIM_ComputerSystem).Domain.tolower()
+$hostname = (Get-CIMInstance CIM_ComputerSystem).Name.ToLower()
+$primarydomain = (Get-CIMInstance CIM_ComputerSystem).Domain.ToLower()
 $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
 
-Write-Output "Local hostname =`t$hostname"
-Write-Output "Primary domain =`t$primarydomain`n"
+Write-Output "Local hostname    =`t$hostname"
+Write-Output "Primary AD-domain =`t$primarydomain`n"
 
 # Get interfaces that are up and print there ip-address
 foreach  ($if in $interfaces) {
     $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
+    $ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6).IPAddress
     $ifName = ($if).Name
     $ifIndex = ($if).ifIndex
-    #Get-DnsClient -InterfaceIndex $ifIndex| select ConnectionSpecificSuffix
-        Write-Output "Interface $ifName ($ifIndex) has address =`t$ipv4"
+    $conspecsuffix = (Get-DnsClient -InterfaceIndex $ifIndex).ConnectionSpecificSuffix
 
-    # Check for the reverse recordin DNS
+    # If there is a domain suffix for interface, print it.
+    if ($conspecsuffix) {
+	Write-Output "Conn. specific suffix for $ifName ($ifIndex)  =`t$conspecsuffix"
+    }
+    Write-Output "Interface $ifName ($ifIndex) has ipv4-address =`t$ipv4"
+    # Write every ipv6 address for the interface on a separate line
+    foreach ($addr_6 in $ipv6) {
+	Write-Output "Interface $ifName ($ifIndex) has ipv6-address =`t$addr_6"
+    }
+
+    # Check for the reverse record in DNS
     $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
     if ($dnshost) {
+	$dnshost= $dnshost.ToLower()
 	Write-Output "Reverse lookup for $ipv4 =`t$dnshost"
 
 	# In case there is no name for dnshost
@@ -52,7 +64,7 @@ foreach  ($if in $interfaces) {
     }
     else {
 	# The ip-address has no record in DNS
-        Write-Output "No reverse lookup for $ipv4`n"
+        Write-Output "No reverse lookup for $ipv4 in DNS.`n"
     }
 }
 
