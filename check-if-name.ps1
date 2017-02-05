@@ -10,11 +10,14 @@
 	./
 
 	.NOTES
+	Results differ depending if computer is AD-connected, have several active interfaces and have ipv6-addresses.
+
 	Needs some better errorhandling
 	Needs better handling of multiple ip-addresses per interface and ipv6
+	Some dead code currently in there.....
 
 	.LINK
-	
+	http://virot.eu/getting-the-computername-in-powershell/
 	
 #>
 
@@ -58,6 +61,7 @@ foreach  ($if in $interfaces) {
 	    Write-Output "No name for $ipv4"
 	    Break
 	}
+	# Currently dead code...
 	finally {
 	    Write-Output "Forward lookup for $dnshost = $revname`n"
 	}
