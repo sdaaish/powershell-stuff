@@ -50,7 +50,7 @@ foreach  ($if in $interfaces) {
     $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
     if ($dnshost) {
 	$dnshost= $dnshost.ToLower()
-	"{0,-49}{1,20}" -f "Reverse lookup for $ipv4 = ","$dnshost"
+	"{0,-49}{1,20}" -f "Reverse DNS lookup for $ipv4 = ","$dnshost"
 
 	# In case there is no name for dnshost
 	try {
@@ -62,7 +62,7 @@ foreach  ($if in $interfaces) {
 	}
 	# Currently dead code...
 	finally {
-	    "{0,-40}{1,15}" -f "Forward lookup for $dnshost =", "$revname`n"
+	    "{0,-40}{1,15}" -f "Forward DNS lookup for $dnshost =", "$revname`n"
 	}
     }
     else {
