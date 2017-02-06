@@ -18,7 +18,8 @@ function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
 function reload-powershell-profile {
-	. $profile.CurrentUserAllHosts
+    . $profile.CurrentUserAllHosts
+    . $DirScripts\aliases.ps1
 }
 function show-profiles {
     $profile|Get-Member -MemberType NoteProperty
@@ -56,4 +57,17 @@ function ipv6 {
 	    "{0,-62} {1,-39}" -f "Interface $ifName ($ifIndex) has ipv6-address =",$addr
 	}
     }
+}
+# Package mgmt functions
+function apc($application) {
+    choco search $application
+}
+function apd {
+    choco upgrade all  -y
+}
+function apo {
+    choco outdated
+}
+function api {
+    choco list -LocalOnly
 }
