@@ -13,7 +13,6 @@
 	Results differ depending if computer is AD-connected, have several active interfaces and have ipv6-addresses.
 
 	Needs some better errorhandling
-	Needs better handling of multiple ip-addresses per interface and ipv6
 	Some dead code currently in there.....
 
 	.LINK
@@ -26,8 +25,8 @@ $hostname = (Get-CIMInstance CIM_ComputerSystem).Name.ToLower()
 $primarydomain = (Get-CIMInstance CIM_ComputerSystem).Domain.ToLower()
 $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
 
-Write-Output "Local hostname    =`t$hostname"
-Write-Output "Primary AD-domain =`t$primarydomain`n"
+"{0,-20}{1,-30}" -f "Local hostname    = ","$hostname"
+"{0,-20}{1,-30}" -f "Primary AD-domain = ","$primarydomain`n"
 
 # Get interfaces that are up and print there ip-address
 foreach  ($if in $interfaces) {
@@ -39,19 +38,19 @@ foreach  ($if in $interfaces) {
 
     # If there is a domain suffix for interface, print it.
     if ($conspecsuffix) {
-	Write-Output "Conn. specific suffix for $ifName ($ifIndex)  =`t$conspecsuffix"
+	"{0,-49}{1,-35}" -f "Conn. specific suffix for $ifName ($ifIndex)  = ","$conspecsuffix"
     }
-    Write-Output "Interface $ifName ($ifIndex) has ipv4-address =`t$ipv4"
+    "{0,-49}{1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address = ","$ipv4"
     # Write every ipv6 address for the interface on a separate line
     foreach ($addr_6 in $ipv6) {
-	Write-Output "Interface $ifName ($ifIndex) has ipv6-address =`t$addr_6"
+	"{0,-49}{1,-30}" -f "Interface $ifName ($ifIndex) has ipv6-address = ","$addr_6"
     }
 
     # Check for the reverse record in DNS
     $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
     if ($dnshost) {
 	$dnshost= $dnshost.ToLower()
-	Write-Output "Reverse lookup for $ipv4 =`t$dnshost"
+	"{0,-49}{1,20}" -f "Reverse lookup for $ipv4 = ","$dnshost"
 
 	# In case there is no name for dnshost
 	try {
@@ -63,7 +62,7 @@ foreach  ($if in $interfaces) {
 	}
 	# Currently dead code...
 	finally {
-	    Write-Output "Forward lookup for $dnshost = $revname`n"
+	    "{0,-40}{1,15}" -f "Forward lookup for $dnshost =", "$revname`n"
 	}
     }
     else {
