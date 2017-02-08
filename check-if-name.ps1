@@ -1,3 +1,4 @@
+
 <#
 
 	.SYNOPSIS
@@ -11,6 +12,7 @@
 
 	.NOTES
 	Results differ depending if computer is AD-connected, have several active interfaces and have ipv6-addresses.
+	Prints the Primary-domain suffix and Primary-NVdomain suffix, just in case....
 
 	Needs some better errorhandling
 	Some dead code currently in there.....
@@ -24,9 +26,14 @@
 $hostname = (Get-CIMInstance CIM_ComputerSystem).Name.ToLower()
 $primarydomain = (Get-CIMInstance CIM_ComputerSystem).Domain.ToLower()
 $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
+# Stupid stuff, Primary DNS-suffix and Non Volatile Domain
+$domain= (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\").Domain
+$nvdomain = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\")."NV Domain"
 
 "{0,-20}{1,-30}" -f "Local hostname    = ","$hostname"
-"{0,-20}{1,-30}" -f "Primary AD-domain = ","$primarydomain`n"
+"{0,-20}{1,-30}" -f "Primary AD-domain = ","$primarydomain"
+"{0,-20}{1,-30}" -f "Primary domain suffix = ","$domain"
+"{0,-20}{1,-30}" -f "Primary nvdomain suffix= ","$nvdomain`n"
 
 # Get interfaces that are up and print there ip-address
 foreach  ($if in $interfaces) {
