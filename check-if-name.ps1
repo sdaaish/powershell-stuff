@@ -46,19 +46,19 @@ foreach  ($if in $interfaces) {
 
     # If there is a domain suffix for interface, print it.
     if ($conspecsuffix) {
-	"{0,-54}{1,-35}" -f "Conn. specific suffix for $ifName ($ifIndex)  = ","$conspecsuffix"
+	"{0,-54}{1,-3}{2,-35}" -f "Conn. specific suffix for $ifName ($ifIndex)"," = ","$conspecsuffix"
     }
-    "{0,-54}{1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address = ","$ipv4"
+    "{0,-54}{1,-3}{2,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address"," = ","$ipv4"
     # Write every ipv6 address for the interface on a separate line
     foreach ($addr_6 in $ipv6) {
-	"{0,-54}{1,-30}" -f "Interface $ifName ($ifIndex) has ipv6-address = ","$addr_6"
+	"{0,-54}{1,-3}{2,-30}" -f "Interface $ifName ($ifIndex) has ipv6-address"," = ","$addr_6"
     }
 
     # Check for the reverse record in DNS
     $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
     if ($dnshost) {
 	$dnshost= $dnshost.ToLower()
-	"{0,-54}{1,-40}" -f "Reverse DNS lookup for $ipv4  = ","$dnshost"
+	"{0,-54}{1,-3}{2,-40}" -f "Reverse DNS lookup for $ipv4"," = ", "$dnshost"
 
 	# In case there is no name for dnshost
 	try {
@@ -72,8 +72,9 @@ foreach  ($if in $interfaces) {
 	# For every ip-address in the forward lookup, resolve to a name (reverse lookup)
 	finally {
 	    foreach ($name in $faddr) {
-		"{0,-40}{1,-40}" -f "Forward DNS lookup for $dnshost = ", "$name"
+		"{0,-54}{1,-3}{2,-40}" -f "Forward DNS lookup for $dnshost", " = ", "$name"
 	    }
+	    Write-Output ""
 	}
     }
     else {
