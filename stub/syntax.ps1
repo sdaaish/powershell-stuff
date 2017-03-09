@@ -15,6 +15,8 @@
 	.LINK
 	https://github.com/sdaaish/powershell-stuff
 	http://kevinpelgrims.wordpress.com
+
+	From Technet: https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/about/about_comment_based_help
 #>
 
 Write-Host ‘Hello World!’
