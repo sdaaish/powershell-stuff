@@ -8,16 +8,19 @@
 	2016-01-28/SDAA
 #>
 
+$hostname = $env:ComputerName
+$outfile = "output-file.txt"
+
 # Output-file
-if (!(Test-Path "output-file.txt"))
+if (!(Test-Path $outfile))
 {
-	New-Item output-file.txt -type file -value "Directory listing for xxx"
+	New-Item output-file.txt -type file -value "Directory listing for $hostname`n"
 	Write-Host "Created new file"
 }
 else
 {
 	Clear-Content output-file.txt
-	Add-Content output-file.txt -value "Directory listing for xxx"
+	Add-Content output-file.txt -value "Directory listing for $hostname`n"
 	Write-Host "File already existed, cleared the file"
 }
 
@@ -27,6 +30,6 @@ else
 
 # List the files, redirect to output-file
 foreach($dir in $dirs) {
-     Write-Output "--- ${dir} ---"|Add-Content 'output-file.txt';
-     Get-ChildItem -Path ${dir}|Add-Content 'output-file.txt';
+     Write-Output "`n--- ${dir} ---"|Add-Content $outfile;
+     Get-ChildItem -Path ${dir}|Add-Content $outfile;
 }
