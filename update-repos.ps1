@@ -17,16 +17,13 @@
 
 #>
 
-$homedir = $env:Userprofile + "\Repos"
-$currentpath = (Get-Location).Path
+$repodir = $env:Userprofile + "\Repos"
 
-[Array] $dirs = (Get-ChildItem -Path $homedir -name .git -Recurse -Directory -Attributes h)
+[Array] $gitdirs = (Get-ChildItem -Path $repodir -Name .git -Recurse -Directory -Attributes h)
 
-foreach($dir in $dirs){
-    $gitdir = (Split-Path $dir)
-    "Updating ${gitdir}"
-    cd $gitdir
-    cmd /c "git pull"
-    cd $currentpath
-    "Done updating ${gitdir}`n"
+foreach($dir in $gitdirs){
+    $cdir = (Split-Path (${repodir} + "\" + ${dir}))
+    "Updating ${cdir}"
+    cmd /c "git -C ${cdir} pull"
+    "Done updating ${cdir}`n"
 }
