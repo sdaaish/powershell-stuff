@@ -3,8 +3,15 @@
 #New-Item alias:x -value "exit"
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Get-Alias
+Set-Alias -Name update-repos -Value ~\Repos\powershell-stuff\update-repos.ps1
 
 #Functions
+function .. {
+    cd ..
+}
+function ... {
+    cd ..\..
+}
 function cdh {
     Set-Location $Env:UserProfile\
 }
