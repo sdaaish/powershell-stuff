@@ -1,17 +1,17 @@
 <#
 
 	.SYNOPSIS
-	This updates git repositories with a git pull
+	This script looks for modified files in local reposotories
 
 	.DESCRIPTION
-	The script searches for directories under %UserProfile%\Repos with a .git directory and makes a git pull
+	The script searches for directories under %UserProfile%\Repos with a .git directory and makes a git status.
 
 	.EXAMPLE
-	./update-repos.ps1
+	./update-status.ps1
 
 	.NOTES
 	The location of repositories is in $env:UserProfile\Repos.
-        git must be in the current PATH.
+  Git must be in the current PATH.
 
 	.LINK
 
