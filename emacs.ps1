@@ -15,7 +15,7 @@
 
 # HKEY_CLASSES_ROOT is equal to HKLM:\Software\Classes
 $registryPath = 'HKLM:\Software\Classes\*\Shell\Emacs\Command'
-$emacs = "C:\ProgramData\chocolatey\bin\runemacs.exe `"%1`""
+$emacs = "C:\ProgramData\chocolatey\bin\emacsclientw.exe -n -a `"`" `"%1`""
 
 if (!(Test-Path -LiteralPath $registryPath)) {
     New-Item -Path $registryPath -Force |Out-Null
@@ -27,4 +27,5 @@ else {
 
 # Read the actual value
 Write-Host "New value for $registryPath.default is:"
-(Get-ItemProperty -LiteralPath $registryPath).'(default)'
+$var = (Get-ItemProperty -LiteralPath $registryPath).'(default)'
+Write-Host $var -ForeGroundColor DarkMagenta
