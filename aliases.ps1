@@ -38,7 +38,14 @@ function cdv {
 }
 function emacs-client() {
     # Starts emacsclient and daemon if not started
-    emacsclientw --quiet --alternate-editor "" --no-wait "$args"
+    if ($args.count -eq 0 ) {
+        # Create a new frame if no files as argument
+        emacsclientw --quiet --alternate-editor "" --no-wait --create-frame
+    }
+    else {
+        # Dont create a new frame if files exists as argument
+        emacsclientw --quiet --alternate-editor "" --no-wait "$args"
+    }
 }
 function reload-powershell-profile {
     . $profile.CurrentUserAllHosts
