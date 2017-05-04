@@ -1,12 +1,21 @@
-#Aliases
+# Aliases
+
 #New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
+
+# Remove built in aliases
+Remove-Item alias:curl
+Remove-Item alias:wget
+Remove-Item alias:diff -Force
+
+# Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Get-Alias
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
-#Set-Alias -Name em -Value emacs
-#Set-Alias -Name emacs -Valuew emacs
+Set-Alias -Name em -Value emacs-client
+Set-Alias -Name emx -Value emacs-client
+Set-Alias -Name emacs -Value emacs-client
 
 #Functions
 function .. {
@@ -26,6 +35,10 @@ function cdw {
 }
 function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
+}
+function emacs-client() {
+    # Starts emacsclient and daemon if not started
+    emacsclientw --quiet --alternate-editor "" --no-wait "$args"
 }
 function reload-powershell-profile {
     . $profile.CurrentUserAllHosts
