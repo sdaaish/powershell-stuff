@@ -40,11 +40,11 @@ function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
         # Create a new frame if no files as argument
-        emacsclientw --quiet --alternate-editor "" --no-wait --create-frame
+        emacsclientw --quiet --alternate-editor="" --create-frame
     }
     else {
         # Dont create a new frame if files exists as argument
-        emacsclientw --quiet --alternate-editor "" --no-wait "$args"
+        emacsclientw --quiet --alternate-editor="" "$args"
     }
 }
 function reload-powershell-profile {
