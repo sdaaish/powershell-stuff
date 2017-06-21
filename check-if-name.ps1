@@ -1,4 +1,3 @@
-
 <#
 
 	.SYNOPSIS
@@ -36,7 +35,7 @@ $nvdomain = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Par
 "{0,-20}{1,-30}" -f "Primary domain suffix   = ","$domain"
 "{0,-20}{1,-30}" -f "Primary nvdomain suffix = ","$nvdomain`n"
 
-# Get interfaces that are up and print there ip-address
+# Get interfaces that are up and print the ip-address
 foreach  ($if in $interfaces) {
     $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
     $ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6).IPAddress
