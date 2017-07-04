@@ -4,9 +4,9 @@
 #New-Item alias:x -value "exit"
 
 # Remove built in aliases
-Remove-Item alias:curl
-Remove-Item alias:wget
-Remove-Item alias:diff -Force
+Remove-Item alias:curl 2>null
+Remove-Item alias:wget 2>null
+Remove-Item alias:diff -Force 2>null
 
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
