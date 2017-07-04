@@ -16,7 +16,7 @@ Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
 Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
 
-Set-Alias -name gnc -Valeu Get-NetConnectionProfile
+Set-Alias -Name gnc -Value Get-NetConnectionProfile
 
 #Functions
 function .. {
