@@ -28,6 +28,9 @@ function ... {
 function cdh {
     Set-Location $Env:UserProfile\
 }
+function cdm {
+    Set-Location $Env:UserProfile\Videos
+}
 function cdr {
     Set-Location $Env:UserProfile\Repos
 }
