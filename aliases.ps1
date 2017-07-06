@@ -18,6 +18,8 @@ Set-Alias -Name emacs -Value emacs-client
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
 
+Set-Alias -Name yodl -Value youtube-dl
+
 #Functions
 function .. {
     cd ..
