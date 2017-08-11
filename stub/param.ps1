@@ -19,8 +19,12 @@
 #>
 
 param (
-    [string]$path = "."
+    [string]$path = ".",
+    [switch]$arg2
 )
 
-Write-Host "The path is $path"
+# All other parameters are counted here
+$psboundparameters.count
+
+Write-Host "The `$path is $path and `$arg2 is $arg2"
 Get-ChildItem -Path $path
