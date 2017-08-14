@@ -42,6 +42,9 @@ function cdw {
 function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
+function llt {
+    Get-ChildItem| Sort-Object lastwritetime
+}
 function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
