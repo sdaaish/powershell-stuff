@@ -97,6 +97,9 @@ function ipv6 {
 	}
     }
 }
+function check-software {
+    Get-ItemProperty HKLM:\Software\WoW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*| Select-Object Displayname,DisplayVersion,Publisher,Installdate|Sort-Object -Property DisplayName
+}
 # Package mgmt functions
 function apc($application) {
     choco search $application
