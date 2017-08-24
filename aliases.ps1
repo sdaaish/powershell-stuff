@@ -3,6 +3,9 @@
 #New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
 
+# Add the path to my powershell-scripts
+$env:Path += ";$env:UserProfile\Repos\powershell-stuff"
+
 # Remove built in aliases
 Remove-Item alias:curl 2>null
 Remove-Item alias:wget 2>null
