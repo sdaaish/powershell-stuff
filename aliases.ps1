@@ -59,6 +59,10 @@ function emacs-client() {
         emacsclientw --quiet --alternate-editor="" "$args"
     }
 }
+# Show dns search suffix
+function get-suffix() {
+    (Get-DnsClientGlobalSetting).SuffixSearchList
+}
 function reload-powershell-profile {
     . $profile.CurrentUserAllHosts
     . $DirScripts\aliases.ps1
