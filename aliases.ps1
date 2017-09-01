@@ -128,3 +128,9 @@ function org-commit {
     git add *.org_archive
     git commit -m "Comitting changes with `"org-commit`""
 }
+# Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
+function fix-tty {
+    $console.ForegroundColor = "white"
+    $console.BackgroundColor = "black"
+    Clear-Host
+}
