@@ -120,3 +120,11 @@ function apo {
 function api {
     choco list -LocalOnly
 }
+# Function to commit changes to org-files quickly
+function org-commit {
+    Write-host -ForeGroundColor green "Commiting changes to org-files to local repo."
+    cd ~/Dropbox/emacs/org
+    git add *.org
+    git add *.org_archive
+    git commit -m "Comitting changes with `"org-commit`""
+}
