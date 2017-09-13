@@ -122,11 +122,12 @@ function api {
 }
 # Function to commit changes to org-files quickly
 function org-commit {
-    Write-host -ForeGroundColor green "Commiting changes to org-files to local repo."
-    cd ~/Dropbox/emacs/org
+    Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
+    Push-Location ~/Dropbox/emacs/org
     git add *.org
     git add *.org_archive
     git commit -m "Comitting changes with `"org-commit`""
+    Pop-Location
 }
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
 function fix-tty {
