@@ -2,6 +2,7 @@
 
 #New-Alias -Name np -Value C:\Windows\System32\notepad.exe
 #New-Item alias:x -value "exit"
+#Set-Location ~
 
 # Add the path to my powershell-scripts
 $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
@@ -20,7 +21,7 @@ Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
-
+Set-Alias -Name kb -Value keybase
 Set-Alias -Name yodl -Value youtube-dl
 
 #Functions
