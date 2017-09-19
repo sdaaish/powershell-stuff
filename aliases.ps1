@@ -136,3 +136,6 @@ function fix-tty {
     $console.BackgroundColor = "black"
     Clear-Host
 }
+function keybase {
+   & ($env:LocalAppData + "\Keybase\keybase.exe") "$args"
+}
