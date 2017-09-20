@@ -137,5 +137,6 @@ function fix-tty {
     Clear-Host
 }
 function keybase {
-   & ($env:LocalAppData + "\Keybase\keybase.exe") "$args"
+    $prg = $env:LocalAppData + "\Keybase\keybase.exe"
+    & $prg "$args"
 }
