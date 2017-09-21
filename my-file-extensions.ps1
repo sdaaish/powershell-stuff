@@ -1,5 +1,5 @@
 [string]$emacs = $env:UserProfile + "\bin\emx.cmd"
-[string]$fileexts = @("txtfile", "xmlfile")
+[string]$fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1")
 
 
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
