@@ -138,5 +138,5 @@ function fix-tty {
 }
 function keybase {
     $prg = $env:LocalAppData + "\Keybase\keybase.exe"
-    & $prg "$args"
+    & $prg $args
 }
