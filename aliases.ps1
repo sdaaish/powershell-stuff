@@ -52,6 +52,9 @@ function lls {
 function llt {
     Get-ChildItem "$args"| Sort-Object lastwritetime
 }
+function now {
+    get-date -Format yyyyMMdd-HH:mm:ss
+}
 function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
