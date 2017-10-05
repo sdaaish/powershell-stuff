@@ -2,7 +2,7 @@
 [string[]] $fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1", "Microsoft.PowerShellData.1", "Microsoft.PowerShellModule.1", "inffile","inifile","scriptletfile","Windows.CompositeFont","textfile")
 
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-  [Security.Principal.WindowsBuiltInRole] "Administrator"))
+  [Security.Principal.WindowsBuiltInRole] "Administrators"))
 {
     Write-Warning "You do not have Administrator rights to run this script!"
     Write-Warning "Please re-run this script as an Administrator!"
