@@ -18,6 +18,7 @@ Set-Alias -Name alias -Value Get-Alias
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
 Set-Alias -Name em -Value emacs-client
+Set-Alias -Name emx -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
 Set-Alias -Name oc -Value org-commit
 
