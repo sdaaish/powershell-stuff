@@ -136,6 +136,7 @@ function org-commit {
     git add *.org
     git add *.org_archive
     git commit -m "Comitting changes with `"org-commit`""
+    git push -q --all
     Pop-Location
 }
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
