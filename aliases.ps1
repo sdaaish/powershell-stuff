@@ -49,10 +49,10 @@ function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
 function lls {
-    Get-ChildItem "$args"|Sort-Object Length
+    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
 function llt {
-    Get-ChildItem "$args"| Sort-Object lastwritetime
+    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
 }
 function now {
     get-date -Format yyyyMMdd-HH:mm:ss
@@ -148,4 +148,15 @@ function fix-tty {
 function keybase {
     $prg = $env:LocalAppData + "\Keybase\keybase.exe"
     & $prg $args
+}
+# Checks for proxy settings
+function get-proxy {
+    $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+    $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
+    if ( $proxyenabled -eq 0) {
+        Write-Host "No proxy enabled"
+    }
+    else {
+        Write-Host "Proxy enabled"
+    }
 }
