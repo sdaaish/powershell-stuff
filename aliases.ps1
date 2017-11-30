@@ -160,3 +160,15 @@ function get-proxy {
         Write-Host "Proxy enabled"
     }
 }
+# Set my explorer preferences
+# See also https://gallery.technet.microsoft.com/scriptcenter/8ac61441-1ad2-4334-b69c-f9189c605f83
+function my-explorer {
+    $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+    Set-ItemProperty $key Hidden 1
+    Set-ItemProperty $key HideFileExt 0
+    Set-ItemProperty $key ShowSuperHidden 1
+    Set-ItemProperty $key ShowEncryptCompressedColor 1
+    Set-ItemProperty $key HideMergeConflicts 0
+    Stop-Process -processname explorer
+    Start-Process explorer
+}
