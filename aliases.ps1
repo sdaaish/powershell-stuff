@@ -57,6 +57,11 @@ function llt {
 function now {
     get-date -Format yyyyMMdd-HH:mm:ss
 }
+# Alias for help-command
+function gh([string]$help) {
+    $ErrorActionPreference = "Ignore"
+    Get-Help -Name $help -Online 
+ }
 function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
