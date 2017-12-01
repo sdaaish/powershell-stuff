@@ -168,7 +168,11 @@ function my-explorer {
     Set-ItemProperty $key HideFileExt 0
     Set-ItemProperty $key ShowSuperHidden 1
     Set-ItemProperty $key ShowEncryptCompressedColor 1
+    Set-ItemProperty $key ShowCompColor 1
+    Set-ItemProperty $key ShowStatusBar 1
     Set-ItemProperty $key HideMergeConflicts 0
+    Set-ItemProperty $key HideIcons 0
+    Set-ItemProperty $key HideDrivesWithNoMedia 0
     Stop-Process -processname explorer
     Start-Process explorer
 }
