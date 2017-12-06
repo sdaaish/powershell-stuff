@@ -181,3 +181,9 @@ function my-explorer {
     Stop-Process -processname explorer
     Start-Process explorer
 }
+# Settings for TaskMgr
+# Only stub for now
+function my-taskmgr {
+    $key = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\TaskManager'
+    Get-ItemProperty $key
+}
