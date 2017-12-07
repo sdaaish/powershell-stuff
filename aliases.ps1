@@ -182,8 +182,10 @@ function my-explorer {
     Start-Process explorer
 }
 # Settings for TaskMgr
-# Only stub for now
+# Only stub for now, more info: https://msitpros.com/?p=1136
 function my-taskmgr {
-    $key = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\TaskManager'
+    $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager'
     Get-ItemProperty $key
+    # reg export HKCU\Software\Microsoft\Windows\CurrentVersion\TaskManager .\conf\taskmgr.reg /y
+    # reg import .\conf\taskmgr.reg
 }
