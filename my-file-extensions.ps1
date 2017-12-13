@@ -17,3 +17,6 @@ foreach ($extension in $fileexts)
     Write-Host "Changing $extension"
     cmd /c "ftype $extension=`"$emacs`" `"%1`""
 }
+
+# To fix for htmlfile
+#  cmd /c "ftype htmlfile=`"C:\Program Files\Mozilla Firefox\firefox.exe`" -osint -url `"%1`""
