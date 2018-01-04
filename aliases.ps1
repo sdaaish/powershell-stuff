@@ -189,3 +189,8 @@ function my-taskmgr {
     # reg export HKCU\Software\Microsoft\Windows\CurrentVersion\TaskManager .\conf\taskmgr.reg /y
     # reg import .\conf\taskmgr.reg
 }
+# Kill explorer and restart it
+function pse {
+    pskill explorer
+    explorer
+}
