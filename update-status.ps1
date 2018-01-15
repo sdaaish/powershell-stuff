@@ -35,7 +35,7 @@ foreach($dir in $gitdirs){
 
         # Print the modified files
         foreach($file in $gitstatus){
-            Write-Host "${file}" -Foregroundcolor Red
+            Write-Host "${file}" -Foregroundcolor Yellow
         }
     }
 }
