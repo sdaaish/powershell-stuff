@@ -191,6 +191,7 @@ function my-taskmgr {
 }
 # Kill explorer and restart it
 function pse {
-    pskill explorer
+    pskill -nobanner explorer
     explorer
+    Write-Host "Explorer restarted"
 }
