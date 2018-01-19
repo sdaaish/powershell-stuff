@@ -157,13 +157,21 @@ function keybase {
 # Checks for proxy settings
 function get-proxy {
     $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+    $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
     $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
+
     if ( $proxyenabled -eq 0) {
         Write-Host "No proxy enabled"
     }
     else {
         Write-Host "Proxy enabled"
     }
+
+    foreach ($setting in $proxysettings) {
+        $value = (Get-ItemProperty -path $regKey).$setting
+        "$setting is:`t$value"
+    }
+
 }
 # Set my explorer preferences
 # See also https://gallery.technet.microsoft.com/scriptcenter/8ac61441-1ad2-4334-b69c-f9189c605f83
