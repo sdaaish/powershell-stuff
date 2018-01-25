@@ -1,3 +1,20 @@
+<#
+.SYNOPSIS
+A script to register file_extensions to open with emacs.
+
+.DESCRIPTION
+This scripts registers emacsclient as the default editor to open certain filetypes with.
+
+.EXAMPLE
+./my-file-extensions.ps1
+
+.NOTES
+Does not work at the moment
+
+.TODO
+- If not admin, request privileges.
+- Register the stuff
+#>
 [string]$emacs = $env:UserProfile + "\bin\emx.cmd"
 [string[]] $fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1", "Microsoft.PowerShellData.1", "Microsoft.PowerShellModule.1", "inffile","inifile","scriptletfile","Windows.CompositeFont","textfile")
 
