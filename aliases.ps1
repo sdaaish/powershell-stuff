@@ -21,6 +21,7 @@ Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emx -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
 Set-Alias -Name oc -Value org-commit
+Set-Alias -Name poff -Value my-shutdown
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
 Set-Alias -Name kb -Value keybase
@@ -202,4 +203,9 @@ function pse {
     pskill -nobanner explorer
     explorer
     Write-Host "Explorer restarted"
+}
+
+# Restart the computer
+Function my-shutdown {
+    & shutdown.exe /r /t 1
 }
