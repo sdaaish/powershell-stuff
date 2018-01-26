@@ -15,24 +15,42 @@ Does not work at the moment
 - If not admin, request privileges.
 - Register the stuff
 #>
+
+# Set variables
 [string]$emacs = $env:UserProfile + "\bin\emx.cmd"
 [string[]] $fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1", "Microsoft.PowerShellData.1", "Microsoft.PowerShellModule.1", "inffile","inifile","scriptletfile","Windows.CompositeFont","textfile")
 
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-  [Security.Principal.WindowsBuiltInRole] "Administrators"))
+function Test-Admin
 {
-    Write-Warning "You do not have Administrator rights to run this script!"
-    Write-Warning "Please re-run this script as an Administrator!"
-    Break
+  $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+  $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
+  $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+  $prp.IsInRole($adm)  
 }
 
-if ( -not (Test-Path $emacs)){
-   throw  "$emacs doesnt exist!"
+Function change-ext {
+    if ( -not (Test-Path $emacs)){
+        #TODO: throw  "$emacs doesnt exist!"
+    }
+    foreach ($extension in $fileexts)
+    {
+        Write-Host "Changing $extension"
+        cmd /c "ftype $extension=`"$emacs`" `"%1`""
+    }
 }
-foreach ($extension in $fileexts)
-{
-    Write-Host "Changing $extension"
-    cmd /c "ftype $extension=`"$emacs`" `"%1`""
+
+#Main
+$user=$env:USERNAME
+$admincheck = Test-Admin
+
+if ( $admincheck ){
+    Write-Host "$user is admin"
+    change-ext
+}
+else {
+    Write-Host "Getting credentials..."
+    $Credential = Get-Credential
+    Start-Process -FilePath PowerShell.exe -Credential $Credential -ArgumentList change-ext
 }
 
 # To fix for htmlfile
