@@ -15,6 +15,7 @@ Remove-Item alias:diff -Force 2>null
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Get-Alias
+Set-Alias -Name crep -value ~\repos\powershell-stuff\check-repos.ps1
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
 Set-Alias -Name em -Value emacs-client
