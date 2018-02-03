@@ -8,9 +8,9 @@
 $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
 
 # Remove built in aliases
-Remove-Item alias:curl 2>null
-Remove-Item alias:wget 2>null
-Remove-Item alias:diff -Force 2>null
+Remove-Item alias:curl 2>$null
+Remove-Item alias:wget 2>$null
+Remove-Item alias:diff -Force 2>$null
 
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
