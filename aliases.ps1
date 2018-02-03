@@ -189,6 +189,7 @@ function my-explorer {
     Set-ItemProperty $key HideMergeConflicts 0
     Set-ItemProperty $key HideIcons 0
     Set-ItemProperty $key HideDrivesWithNoMedia 0
+    Set-ItemProperty $key AutoCheckSelect 1
     Stop-Process -processname explorer
     Start-Process explorer
 }
