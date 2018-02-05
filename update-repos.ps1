@@ -13,6 +13,7 @@
 
 	.NOTES
   "git" must be in the current PATH.
+  It won't update files that belong to lxss, ie Windows Linux Subshell (WSL), which is a bad idea.
 
 	.LINK
 #>
@@ -23,19 +24,27 @@ param (
 )
 
 Function check-git {
-    [Array] $gitdirs = (Get-ChildItem -Path $repodir -Name .git -Recurse -Directory -Attributes Hidden, !Hidden)
+    [Array] $gitdirs = (Get-ChildItem -Path $folder -Name .git -Recurse -Directory -Attributes Hidden, !Hidden)
 
     foreach($dir in $gitdirs){
-        $cdir = (Split-Path (${repodir} + "\" + ${dir}))
-        "Updating ${cdir}"
-        cmd /c "git -C ${cdir} pull"
-        "Done updating ${cdir}`n"
+
+        # Add .git to the path and convert to absolute
+        $cdir = (Convert-Path ((Split-Path (${folder} + "\" + ${dir}))))
+
+        #If it is a WSL directory, lxss, dont update since bad things happens.
+        if ($cdir -match "AppData\\local\\lxss" ) {
+            "Will not update git in $cdir`n"
+        }
+        else {
+            "Updating ${cdir}"
+            cmd /c "git -C ${cdir} pull"
+            "Done updating ${cdir}`n"
+        }
     }
 }
 
 # Main
 if (Test-Path -Path $folder -PathType Container){
-    $repodir = $folder
     check-git
     }
 else {
