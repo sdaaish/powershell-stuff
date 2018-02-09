@@ -176,6 +176,15 @@ function get-proxy {
     }
 
 }
+# Check DNS settings
+Function check-dns {
+    $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
+    foreach ($if in ($interfaces)){
+        $dnsserver = (Get-DNSClientServerAddress -InterfaceIndex ($if).ifIndex)
+        ($dnsserver.ServerAddresses)
+    }
+}
+
 # Set my explorer preferences
 # See also https://gallery.technet.microsoft.com/scriptcenter/8ac61441-1ad2-4334-b69c-f9189c605f83
 function my-explorer {
