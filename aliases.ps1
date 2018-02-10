@@ -176,12 +176,14 @@ function get-proxy {
     }
 
 }
-# Check DNS settings
-Function check-dns {
+# Display current dns-servers for active interfaces
+Function get-dns-servers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
-    foreach ($if in ($interfaces)){
-        $dnsserver = (Get-DNSClientServerAddress -InterfaceIndex ($if).ifIndex)
-        ($dnsserver.ServerAddresses)
+    foreach ($if in $interfaces){
+        $dnsserver = (Get-DNSClientServerAddress -InterfaceIndex $if.ifIndex)
+        Write-Host -NoNewLine "Interface: "
+        $if.Name
+        $dnsserver.ServerAddresses
     }
 }
 
