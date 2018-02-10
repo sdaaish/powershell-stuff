@@ -77,7 +77,7 @@ function emacs-client() {
     }
 }
 # Show dns search suffix
-function get-suffix() {
+function get-dns-suffix() {
     (Get-DnsClientGlobalSetting).SuffixSearchList
 }
 function reload-powershell-profile {
