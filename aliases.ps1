@@ -29,6 +29,8 @@ Set-Alias -Name gnc -Value Get-NetConnectionProfile
 Set-Alias -Name kb -Value keybase
 Set-Alias -Name yodl -Value youtube-dl
 
+Set-Alias -Name lll -Value Find-Links
+
 #Functions
 function .. {
     cd ..
@@ -227,4 +229,9 @@ Function my-shutdown {
 # Restart the computer
 Function my-reboot {
     & shutdown.exe /r /t 1
+}
+
+# Find links in the filesystem
+function Find-Links([string]$path=".") {
+    Get-ChildItem $path -ErrorAction SilentlyContinue| ?{$_.Linktype}| Select-Object FullName, Target,LastWriteTime,LinkType
 }
