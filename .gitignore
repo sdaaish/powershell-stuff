@@ -1,2 +1,9 @@
 *.ps1~
 output-file*.txt
+
+# Testing files
+demo*.ps1
+labb*.*
+
+# Local directory for gists
+gists/
