@@ -33,7 +33,7 @@ Function check-git {
 
         #If it is a WSL directory, lxss, dont update since bad things happens.
         if ($cdir -match "AppData\\local\\lxss" ) {
-            "Will not update git in $cdir`n"
+            Write-Host "Will not update git in $cdir`n" -ForegroundColor red
         }
         else {
             "Updating ${cdir}"

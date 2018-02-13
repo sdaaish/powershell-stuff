@@ -28,18 +28,27 @@ Function check-git {
     [Array] $gitdirs = (Get-ChildItem -Path $repodir -Name .git -Recurse -Directory -Attributes Hidden, !Hidden)
 
     foreach($dir in $gitdirs){
+
+        # Add .git to the path and convert to absolute
         $cdir = (Convert-Path (Split-Path (${repodir} + "\" + ${dir})))
-        $gitstatus=(git -C ${cdir} status --porcelain)
 
-        # Check if there were any modified files
-        if ($gitstatus|where {$_ -match '^\?\?|^A|^M|^R'}) {
-            Write-Host "`nRepo " -Foregroundcolor Green -NoNewLine
-            Write-Host "${cdir} "  -Foregroundcolor Cyan -NoNewLine
-            Write-Host "modified:"  -Foregroundcolor Green 
+        #If it is a WSL directory, lxss, dont update since bad things happens.
+        if ($cdir -match "AppData\\local\\lxss" ) {
+            Write-Host "Will not check git in $cdir`n" -ForegroundColor red
+        }
+        else {
+            $gitstatus=(git -C ${cdir} status --porcelain)
 
-            # Print the modified files
-            foreach($file in $gitstatus){
-                Write-Host "${file}" -Foregroundcolor Yellow
+            # Check if there were any modified files
+            if ($gitstatus|where {$_ -match '^\?\?|^A|^M|^R'}) {
+                Write-Host "`nRepo " -Foregroundcolor Green -NoNewLine
+                Write-Host "${cdir} "  -Foregroundcolor Cyan -NoNewLine
+                Write-Host "modified:"  -Foregroundcolor Green
+
+                # Print the modified files
+                foreach($file in $gitstatus){
+                    Write-Host "${file}" -Foregroundcolor Yellow
+                }
             }
         }
     }
