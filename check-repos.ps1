@@ -23,19 +23,25 @@ param (
 )
 
 Function check-git {
-    [Array] $gitdirs = (Get-ChildItem -Path $repodir -Name .git -Recurse -Directory -Attributes Hidden, !Hidden)
+    [Array] $gitdirs = (Get-ChildItem -Path $folder -Name .git -Recurse -Directory -Attributes Hidden, !Hidden)
 
     foreach($dir in $gitdirs){
-        $cdir = (Split-Path (${repodir} + "\" + ${dir}))
-        Write-Host "Checking remote for ${cdir}" -foregroundcolor green
-        cmd /c "git -C ${cdir} remote -v"
-        "`n"
+        # Add .git to the path and convert to absolute
+        $cdir = (Convert-Path ((Split-Path (${folder} + "\" + ${dir}))))
+
+        if ($cdir -match "AppData\\local\\lxss" ) {
+            Write-Host "Will not check git in $cdir`n" -ForegroundColor red
+        }
+        else {
+            Write-Host "Checking remote for ${cdir}" -foregroundcolor green
+            cmd /c "git -C ${cdir} remote -v"
+            "`n"
+        }
     }
 }
 
 # Main
 if (Test-Path -Path $folder -PathType Container){
-    $repodir = $folder
     check-git
     }
 else {
