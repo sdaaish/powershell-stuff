@@ -123,8 +123,13 @@ function ipv6 {
 	}
     }
 }
+# Check installed software
 function check-software {
     Get-ItemProperty HKLM:\Software\WoW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*| Select-Object Displayname,DisplayVersion,Publisher,Installdate|Sort-Object -Property DisplayName
+}
+# Check windows optional packages
+Function check-packages {
+    Get-WindowsOptionalFeature -online|select FeatureName, State| where state -eq Enabled
 }
 # Package mgmt functions
 function apc($application) {
