@@ -17,14 +17,31 @@
 $registryPath = 'HKLM:\Software\Classes\*\Shell\Notepad\Command'
 $Notepad = "C:\Windows\notepad.exe `"%1`""
 
-if (!(Test-Path -LiteralPath $registryPath)) {
-    New-Item -Path $registryPath -Force |Out-Null
-    New-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $Notepad -PropertyType string |OUT-Null
-}
-else {
-    Set-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $Notepad -Force|OUT-Null
+# Test for admin privs
+function Test-Admin
+{
+    $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
+    $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+    $prp.IsInRole($adm)
 }
 
-# Read the actual value
-Write-Host "New value for $registryPath.default is:"
-(Get-ItemProperty -LiteralPath $registryPath).'(default)'
+$admincheck = Test-Admin
+if ( $admincheck ){
+    if (!(Test-Path -LiteralPath $registryPath)) {
+        New-Item -Path $registryPath -Force |Out-Null
+        New-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $Notepad -PropertyType string |OUT-Null
+    }
+    else {
+        Set-ItemProperty -LiteralPath $registryPath -Name "(default)" -value $Notepad -Force|OUT-Null
+    }
+
+    # Read the actual value
+    Write-Host "New value for " -NoNewLine
+    Write-Host -ForeGroundColor green "$registryPath.default is: " -Nonewline
+    $var = (Get-ItemProperty -LiteralPath $registryPath).'(default)'
+    Write-Host $var -ForeGroundColor DarkMagenta
+}
+else {
+    Write-Host -ForeGroundColor Red "You dont have administrative rights to change this!"
+}
