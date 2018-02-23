@@ -146,11 +146,12 @@ function api {
 }
 # Function to commit changes to org-files quickly
 function org-commit {
+    $date = (Get-Date -Format yyyyMMdd-hh:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
     Push-Location ~/Dropbox/emacs/org
     git add *.org
     git add *.org_archive
-    git commit -m "Comitting changes with `"org-commit`""
+    git commit -m "Comitting changes $date"
     git push -q --all
     Pop-Location
 }
