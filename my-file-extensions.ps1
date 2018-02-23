@@ -18,7 +18,7 @@ Does not work at the moment
 
 # Set variables
 [string]$emacs = $env:UserProfile + "\bin\emx.cmd"
-[string[]] $fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1", "Microsoft.PowerShellData.1", "Microsoft.PowerShellModule.1", "inffile","inifile","scriptletfile","Windows.CompositeFont","textfile")
+[string[]] $fileexts = @("txtfile", "xmlfile", "Microsoft.PowerShellScript.1", "Microsoft.PowerShellData.1", "Microsoft.PowerShellModule.1", "inffile","inifile","scriptletfile","Windows.CompositeFont","textfile","OrgFile")
 
 function Test-Admin
 {
@@ -28,6 +28,13 @@ function Test-Admin
   $prp.IsInRole($adm)  
 }
 
+# Add .org as OrgFile.
+Function add-ext {
+    Write-Host "Associate .org as Org-mode"
+    cmd /c "assoc .org=OrgFile"
+}
+
+# Add all filextensions to open with emx.cmd.
 Function change-ext {
     if ( -not (Test-Path $emacs)){
         #TODO: throw  "$emacs doesnt exist!"
@@ -45,12 +52,11 @@ $admincheck = Test-Admin
 
 if ( $admincheck ){
     Write-Host "$user is admin"
+    add-ext
     change-ext
 }
 else {
-    Write-Host "Getting credentials..."
-    $Credential = Get-Credential
-    Start-Process -FilePath PowerShell.exe -Credential $Credential -ArgumentList change-ext
+    Write-Host -ForeGroundColor Red "You dont have administrative rights to change this!"
 }
 
 # To fix for htmlfile
