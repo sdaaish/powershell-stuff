@@ -209,6 +209,8 @@ function my-explorer {
     Set-ItemProperty $key HideIcons 0
     Set-ItemProperty $key HideDrivesWithNoMedia 0
     Set-ItemProperty $key AutoCheckSelect 1
+    Set-ItemProperty $key HideDrivesWithNoMedia 1
+    Set-ItemProperty $key NavPaneExpandToCurrentFolder 1
     Stop-Process -processname explorer
     Start-Process explorer
 }
