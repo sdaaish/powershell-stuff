@@ -243,3 +243,9 @@ Function my-reboot {
 function Find-Links([string]$path=".") {
     Get-ChildItem $path -ErrorAction SilentlyContinue| ?{$_.Linktype}| Select-Object FullName, Target,LastWriteTime,LinkType
 }
+
+# Get IP address for a hostname
+function Get-HostToIP($hostname) {     
+    $result = [system.Net.Dns]::GetHostByName($hostname)     
+    $result.AddressList | ForEach-Object {$_.IPAddressToString } 
+} 
