@@ -67,6 +67,16 @@ function gh([string]$help) {
     $ErrorActionPreference = "Ignore"
     Get-Help -Name $help -Online 
  }
+# Show aliases online
+Function check-alias {
+    $tmp = New-TemporaryFile
+    Get-Alias|Sort-Object Definition|ConvertTo-Html -Property Name,Definition > $tmp.FullName
+    Invoke-Item $tmp.FullName
+    # Sleep before removal
+    Start-Sleep 2 
+    Remove-Item $tmp.FullName
+}
+
 function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
