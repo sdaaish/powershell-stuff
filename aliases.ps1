@@ -65,8 +65,8 @@ function now {
 # Alias for help-command
 function gh([string]$help) {
     $ErrorActionPreference = "Ignore"
-    Get-Help -Name $help -Online 
- }
+    Get-Help -Name $help -Online
+}
 # Show aliases online
 Function check-alias {
     $tmp = New-TemporaryFile
@@ -108,29 +108,29 @@ function show-path {
 function ipv4 {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach  ($if in $interfaces) {
-	$ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
-	$ifName = ($if).Name
-	$ifIndex = ($if).ifIndex
+ $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
+ $ifName = ($if).Name
+ $ifIndex = ($if).ifIndex
 
-	# Write every ipv6 address for the interface on a separate line
-	foreach ($addr in $ipv4) {
-	    # Format for ipv4-address, and longest interfacename, Virtualbox
-	    "{0,-62} {1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address =",$addr
-	}
+ # Write every ipv6 address for the interface on a separate line
+ foreach ($addr in $ipv4) {
+     # Format for ipv4-address, and longest interfacename, Virtualbox
+     "{0,-62} {1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address =",$addr
+ }
     }
 }
 function ipv6 {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach  ($if in $interfaces) {
-	$ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6).IPAddress
-	$ifName = ($if).Name
-	$ifIndex = ($if).ifIndex
+        $ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6).IPAddress
+        $ifName = ($if).Name
+        $ifIndex = ($if).ifIndex
 
-	# Write every ipv6 address for the interface on a separate line
-	foreach ($addr in $ipv6) {
-	    # Format for ipv6-address, and longest interfacename, Virtualbox
-	    "{0,-62} {1,-39}" -f "Interface $ifName ($ifIndex) has ipv6-address =",$addr
-	}
+        # Write every ipv6 address for the interface on a separate line
+        foreach ($addr in $ipv6) {
+            # Format for ipv6-address, and longest interfacename, Virtualbox
+            "{0,-62} {1,-39}" -f "Interface $ifName ($ifIndex) has ipv6-address =",$addr
+ }
     }
 }
 # Check installed software
@@ -255,7 +255,7 @@ function Find-Links([string]$path=".") {
 }
 
 # Get IP address for a hostname
-function Get-HostToIP($hostname) {     
-    $result = [system.Net.Dns]::GetHostByName($hostname)     
-    $result.AddressList | ForEach-Object {$_.IPAddressToString } 
-} 
+function Get-HostToIP($hostname) {
+    $result = [system.Net.Dns]::GetHostByName($hostname)
+    $result.AddressList | ForEach-Object {$_.IPAddressToString }
+}
