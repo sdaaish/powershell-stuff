@@ -24,6 +24,7 @@ Set-Alias -Name emacs -Value emacs-client
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
+Set-Alias -name pwsh -value Find-pwsh
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
 Set-Alias -Name kb -Value keybase
@@ -108,15 +109,15 @@ function show-path {
 function ipv4 {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach  ($if in $interfaces) {
- $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
- $ifName = ($if).Name
- $ifIndex = ($if).ifIndex
+        $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
+        $ifName = ($if).Name
+        $ifIndex = ($if).ifIndex
 
- # Write every ipv6 address for the interface on a separate line
- foreach ($addr in $ipv4) {
-     # Format for ipv4-address, and longest interfacename, Virtualbox
-     "{0,-62} {1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address =",$addr
- }
+        # Write every ipv6 address for the interface on a separate line
+        foreach ($addr in $ipv4) {
+            # Format for ipv4-address, and longest interfacename, Virtualbox
+            "{0,-62} {1,-15}" -f "Interface $ifName ($ifIndex) has ipv4-address =",$addr
+        }
     }
 }
 function ipv6 {
@@ -130,7 +131,7 @@ function ipv6 {
         foreach ($addr in $ipv6) {
             # Format for ipv6-address, and longest interfacename, Virtualbox
             "{0,-62} {1,-39}" -f "Interface $ifName ($ifIndex) has ipv6-address =",$addr
- }
+        }
     }
 }
 # Check installed software
@@ -259,3 +260,16 @@ function Get-HostToIP($hostname) {
     $result = [system.Net.Dns]::GetHostByName($hostname)
     $result.AddressList | ForEach-Object {$_.IPAddressToString }
 }
+
+# Find the path of powershell-core
+Function find-pwsh {
+    $pwsh = Convert-Path (Get-Childitem '\Program Files\Powershell\*\Pwsh.exe')
+    $pwsh
+    if (Test-Path $pwsh){
+        & $pwsh
+    }
+    else {
+        Write-Host "No such file, $pwsh" -ForegroundColor Yellow
+    }
+}
+
