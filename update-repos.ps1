@@ -30,6 +30,8 @@ Function check-git {
 
         # Add .git to the path and convert to absolute
         $cdir = (Convert-Path ((Split-Path (${folder} + "\" + ${dir}))))
+        # Trim trailing slash
+        $cdir = $cdir.Trim('\')
 
         #If it is a WSL directory, lxss, dont update since bad things happens.
         if ($cdir -match "AppData\\local\\lxss" ) {
@@ -37,7 +39,7 @@ Function check-git {
         }
         else {
             "Updating ${cdir}"
-            cmd /c "git -C ${cdir} pull"
+            Invoke-Expression 'git -C $cdir pull'
             "Done updating ${cdir}`n"
         }
     }
@@ -51,4 +53,3 @@ else {
     "$folder is not a valid directory. Exiting."
     break
 }
-

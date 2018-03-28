@@ -28,13 +28,15 @@ Function check-git {
     foreach($dir in $gitdirs){
         # Add .git to the path and convert to absolute
         $cdir = (Convert-Path ((Split-Path (${folder} + "\" + ${dir}))))
+        # Remove trailing slash
+        $cdir = $cdir.Trim('\')
 
         if ($cdir -match "AppData\\local\\lxss" ) {
             Write-Host "Will not check git in $cdir`n" -ForegroundColor red
         }
         else {
             Write-Host "Checking remote for ${cdir}" -foregroundcolor green
-            cmd /c "git -C ${cdir} remote -v"
+            Invoke-expression 'git -C ${cdir} remote -v'
             "`n"
         }
     }
