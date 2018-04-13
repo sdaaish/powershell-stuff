@@ -48,6 +48,9 @@ function cdm {
 function cdr {
     Set-Location $Env:UserProfile\Repos
 }
+function cdrw {
+    Set-Location $Env:UserProfile\Work
+}
 function cdw {
     Set-Location $Env:UserProfile\Downloads
 }
