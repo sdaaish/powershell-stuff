@@ -32,6 +32,8 @@ Set-Alias -Name yodl -Value youtube-dl
 
 Set-Alias -Name lll -Value Find-Links
 
+Set-Alias -Name ra -Value resolve-address
+
 #Functions
 function .. {
     cd ..
@@ -262,6 +264,16 @@ function Find-Links([string]$path=".") {
 function Get-HostToIP($hostname) {
     $result = [system.Net.Dns]::GetHostByName($hostname)
     $result.AddressList | ForEach-Object {$_.IPAddressToString }
+}
+
+# Do a DNS lookup
+function resolve-address($address) {
+    try {
+        $ip = ([ipaddress]$address).IPAddressToString 
+    }
+    catch {
+    }
+    (Resolve-DnsName -DnsOnly $address -erroraction silentlycontinue)
 }
 
 # Find the path of powershell-core
