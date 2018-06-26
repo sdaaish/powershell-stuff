@@ -32,6 +32,8 @@ Set-Alias -Name yodl -Value youtube-dl
 
 Set-Alias -Name lll -Value Find-Links
 
+Set-Alias -Name lok -Value find-dropbox-conflicts
+
 Set-Alias -Name ra -Value resolve-address
 
 #Functions
@@ -288,3 +290,7 @@ Function find-pwsh {
     }
 }
 
+# Find orgmode conflicts in Dropbox
+Function find-dropbox-conflicts {
+    Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
+}
