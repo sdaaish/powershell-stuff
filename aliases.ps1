@@ -75,6 +75,11 @@ function gh([string]$help) {
     $ErrorActionPreference = "Ignore"
     Get-Help -Name $help -Online
 }
+# Shortcut to create an array
+Function ql {
+    $args
+}
+
 # Show aliases online
 Function check-alias {
     $tmp = New-TemporaryFile
