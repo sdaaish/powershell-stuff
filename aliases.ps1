@@ -83,11 +83,13 @@ Function ql {
 # Show aliases online
 Function check-alias {
     $tmp = New-TemporaryFile
-    Get-Alias|Sort-Object Definition|ConvertTo-Html -Property Name,Definition > $tmp.FullName
-    Invoke-Item $tmp.FullName
+    Rename-Item -Path $tmp  -NewName "$tmp.html"
+    $tmp="$tmp.html"
+    Get-Alias|Sort-Object Definition|ConvertTo-Html -Property Name,Definition -Title "Powershell aliases"> $tmp
+    Invoke-Item $tmp
     # Sleep before removal
     Start-Sleep 2 
-    Remove-Item $tmp.FullName
+    Remove-Item $tmp
 }
 
 function emacs-client() {
