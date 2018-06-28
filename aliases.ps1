@@ -264,6 +264,11 @@ Function my-reboot {
     & shutdown.exe /r /t 1
 }
 
+# Show services
+Function my-service {
+    Get-Service| Sort -Property @{Expression = "Status"; Descending = "True"},@{Expression = "Name"}|Out-GridView
+}
+
 # Find links in the filesystem
 function Find-Links([string]$path=".") {
     Get-ChildItem $path -ErrorAction SilentlyContinue| ?{$_.Linktype}| Select-Object FullName, Target,LastWriteTime,LinkType
