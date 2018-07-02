@@ -75,6 +75,11 @@ function gh([string]$help) {
     $ErrorActionPreference = "Ignore"
     Get-Help -Name $help -Online
 }
+# Alias for help-command local window
+function ghl([string]$help) {
+    $ErrorActionPreference = "Ignore"
+    Get-Help -Name $help -ShowWindow
+}
 # Shortcut to create an array
 Function ql {
     $args
