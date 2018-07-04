@@ -21,6 +21,7 @@ Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
 Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emx -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
+Set-Alias -Name l -Value Get-Content
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
