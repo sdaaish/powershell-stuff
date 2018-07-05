@@ -296,12 +296,13 @@ function resolve-address($address) {
     (Resolve-DnsName -DnsOnly $address -erroraction silentlycontinue)
 }
 
-# Find the path of powershell-core
+# Find the path of powershell-core.
+# If there are more versions, start the first one.
 Function find-pwsh {
     $pwsh = Convert-Path (Get-Childitem '\Program Files\Powershell\*\Pwsh.exe')
     $pwsh
     if (Test-Path $pwsh){
-        & $pwsh
+        & $pwsh[0]
     }
     else {
         Write-Host "No such file, $pwsh" -ForegroundColor Yellow
