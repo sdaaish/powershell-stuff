@@ -314,3 +314,43 @@ Function find-pwsh {
 Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
 }
+
+# Create a module base directory
+# From https://ramblingcookiemonster.github.io/Building-A-PowerShell-Module/
+# and https://kevinmarquette.github.io/2017-05-27-Powershell-module-building-basics/
+Function New-ModuleDir {
+    param(
+        [Parameter(Mandatory=$True)]
+        $Path,
+        [Parameter(Mandatory=$True)]
+        $ModuleName,
+        [Parameter(Mandatory=$True)]
+        $Author,
+        [Parameter(Mandatory=$True)]
+        $Description
+    )
+
+    $ModuleDir = "$Path\$ModuleName"
+    
+    # Create the module and private function directories
+    New-Item "$ModuleDir" -ItemType Directory
+    New-Item "$ModuleDir\Private" -ItemType Directory
+    New-Item "$ModuleDir\Public" -ItemType Directory
+    New-Item "$ModuleDir\en-US" -ItemType Directory # For about_Help files
+    New-Item "$ModuleDir\Tests" -ItemType Directory
+
+    #Create the module and related files
+    New-Item "$ModuleDir\$ModuleName.psm1" -ItemType File
+    New-Item "$ModuleDir\$ModuleName.Format.ps1xml" -ItemType File
+    New-Item "$ModuleDir\en-US\about_$ModuleName.help.txt" -ItemType File
+    New-Item "$ModuleDir\Tests\$ModuleName.Tests.ps1" -ItemType File
+
+    $manifest = @{
+        Path              = "$ModuleDir\$ModuleName.psd1"
+        RootModule        = "$MyModuleName.psm1"
+        Author            = "$Author"
+        Description       = "$Description"
+        FormatsToProcess  = "$ModuleName.Format.ps1xml"
+    }
+    New-ModuleManifest @manifest
+}
