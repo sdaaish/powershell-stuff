@@ -315,6 +315,20 @@ Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
 }
 
+# Search google for stuff
+Function google-search {
+    $search += $args -join "+"
+
+    if($search){
+        $uri = "https://www.google.com/search?q=" + "$search"
+    }
+    else {
+        $uri = "https://www.google.com/search"
+    }
+
+    Start-Process $uri
+}
+
 # Start hugo locally and fire up a webpage
 Function test-hugo {
     Start-Job -ScriptBlock {hugo server --disableFastRender}
