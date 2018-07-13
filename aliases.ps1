@@ -315,6 +315,42 @@ Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
 }
 
+# Search bing for powershell examples
+# Bing has preview of powershell code which is nice
+Function bing-search-powershell {
+    $search = "powershell+"
+    $search += $args -join "+"
+
+    if($search){
+        $uri = "https://www.bing.com/search?q=" + "$search"
+    }
+    else {
+        $uri = "https://www.bing.com/search"
+    }
+
+    Start-Process $uri
+}
+
+# Search google for stuff
+Function google-search {
+    $search += $args -join "+"
+
+    if($search){
+        $uri = "https://www.google.com/search?q=" + "$search"
+    }
+    else {
+        $uri = "https://www.google.com/search"
+    }
+
+    Start-Process $uri
+}
+
+# Start hugo locally and fire up a webpage
+Function test-hugo {
+    Start-Job -ScriptBlock {hugo server --disableFastRender}
+    hugo server -D
+}
+
 # Create a module base directory
 # From https://ramblingcookiemonster.github.io/Building-A-PowerShell-Module/
 # and https://kevinmarquette.github.io/2017-05-27-Powershell-module-building-basics/
