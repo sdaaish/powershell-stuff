@@ -315,6 +315,12 @@ Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
 }
 
+# Start hugo locally and fire up a webpage
+Function test-hugo {
+    Start-Job -ScriptBlock {hugo server --disableFastRender}
+    hugo server -D
+}
+
 # Create a module base directory
 # From https://ramblingcookiemonster.github.io/Building-A-PowerShell-Module/
 # and https://kevinmarquette.github.io/2017-05-27-Powershell-module-building-basics/
