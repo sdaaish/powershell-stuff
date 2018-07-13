@@ -337,7 +337,7 @@ Function New-ModuleDir {
     New-Item "$ModuleDir\Private" -ItemType Directory
     New-Item "$ModuleDir\Public" -ItemType Directory
     New-Item "$ModuleDir\en-US" -ItemType Directory # For about_Help files
-    New-Item "$ModuleDir\Tests" -ItemType Directory
+    New-Item "$Path\Tests" -ItemType Directory
 
     #Create the module and related files
     New-Item "$ModuleDir\$ModuleName.psm1" -ItemType File
