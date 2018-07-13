@@ -315,6 +315,22 @@ Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
 }
 
+# Search bing for powershell examples
+# Bing has preview of powershell code which is nice
+Function bing-search-powershell {
+    $search = "powershell+"
+    $search += $args -join "+"
+
+    if($search){
+        $uri = "https://www.bing.com/search?q=" + "$search"
+    }
+    else {
+        $uri = "https://www.bing.com/search"
+    }
+
+    Start-Process $uri
+}
+
 # Search google for stuff
 Function google-search {
     $search += $args -join "+"
