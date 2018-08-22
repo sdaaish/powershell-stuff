@@ -64,6 +64,9 @@ function cdw {
 function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
+function ll {
+    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+}
 function lls {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
