@@ -39,6 +39,8 @@ Set-Alias -Name lok -Value find-dropbox-conflicts
 
 Set-Alias -Name ra -Value resolve-address
 
+Set-alias -Name gts -Value Get-MyGitStatus
+
 #Functions
 function .. {
     cd ..
@@ -191,6 +193,12 @@ function org-commit {
     git push -q --all
     Pop-Location
 }
+
+# Alias for git status
+Function Get-MyGitStatus {
+    git status -sb
+}
+
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
 function fix-tty {
     $console.ForegroundColor = "white"
