@@ -26,6 +26,7 @@ Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
 Set-Alias -name pwsh -value Find-pwsh
+Set-Alias -name st -value Start-Transcript
 Set-Alias -name which -value Get-Command
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
