@@ -4,6 +4,8 @@
 #New-Item alias:x -value "exit"
 #Set-Location ~
 
+Import-Module Get-ChildItemColor
+
 # Add the path to my powershell-scripts
 $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
 
@@ -11,6 +13,7 @@ $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
 Remove-Item alias:curl 2>$null
 Remove-Item alias:wget 2>$null
 Remove-Item alias:diff -Force 2>$null
+Remove-Item alias:ls -Force 2>$null
 
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
@@ -26,6 +29,7 @@ Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
 Set-Alias -name pwsh -value Find-pwsh
+Set-Alias -name st -value Start-Transcript
 Set-Alias -name which -value Get-Command
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
@@ -37,6 +41,8 @@ Set-Alias -Name lll -Value Find-Links
 Set-Alias -Name lok -Value find-dropbox-conflicts
 
 Set-Alias -Name ra -Value resolve-address
+
+Set-alias -Name gts -Value Get-MyGitStatus
 
 #Functions
 function .. {
@@ -63,6 +69,22 @@ function cdw {
 function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
+function ls {
+    if (Get-Module Get-ChildItemColor) {
+        Get-ChildItemColorFormatWide "$args"
+    }
+    else {
+        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+    }
+}
+function ll {
+    if (Get-Module Get-ChildItemColor) {
+        Get-ChildItemColor "$args"
+    }
+    else {
+        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+    }
+}
 function lls {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
@@ -85,6 +107,11 @@ function ghl([string]$help) {
 # Shortcut to create an array
 Function ql {
     $args
+}
+
+# Equivalent of linux wc, word counts
+Function wc {
+    Get-Content "$args"| Measure-Object -Character -Line -Word| select lines,words,characters
 }
 
 # Show aliases online
@@ -187,6 +214,12 @@ function org-commit {
     git push -q --all
     Pop-Location
 }
+
+# Alias for git status
+Function Get-MyGitStatus {
+    git status -sb
+}
+
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
 function fix-tty {
     $console.ForegroundColor = "white"
@@ -231,18 +264,42 @@ Function get-dns-servers {
 # See also https://gallery.technet.microsoft.com/scriptcenter/8ac61441-1ad2-4334-b69c-f9189c605f83
 function my-explorer {
     $key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
-    Set-ItemProperty $key Hidden 1
-    Set-ItemProperty $key HideFileExt 0
-    Set-ItemProperty $key ShowSuperHidden 1
-    Set-ItemProperty $key ShowEncryptCompressedColor 1
-    Set-ItemProperty $key ShowCompColor 1
-    Set-ItemProperty $key ShowStatusBar 1
-    Set-ItemProperty $key HideMergeConflicts 0
-    Set-ItemProperty $key HideIcons 0
-    Set-ItemProperty $key HideDrivesWithNoMedia 0
+    Set-ItemProperty $key AlwaysShowMenus 1
     Set-ItemProperty $key AutoCheckSelect 1
+    Set-ItemProperty $key DisablePreviewDesktop 0
+    Set-ItemProperty $key DontPrettyPath 0
+    Set-ItemProperty $key DontUsePowerShellOnWinX 0
+    Set-ItemProperty $key Filter 0
+    Set-ItemProperty $key Hidden 1
+    Set-ItemProperty $key HideDrivesWithNoMedia 0
     Set-ItemProperty $key HideDrivesWithNoMedia 1
+    Set-ItemProperty $key HideFileExt 0
+    Set-ItemProperty $key HideIcons 0
+    Set-ItemProperty $key HideMergeConflicts 0
+    Set-ItemProperty $key IconsOnly 0
+    Set-ItemProperty $key ListviewAlphaSelect 1
+    Set-ItemProperty $key ListviewShadow 1
+    Set-ItemProperty $key MMTaskbarEnabled 0
+    Set-ItemProperty $key MapNetDrvBtn 0
     Set-ItemProperty $key NavPaneExpandToCurrentFolder 1
+    Set-ItemProperty $key NavPaneShowAllFolders 1
+    Set-ItemProperty $key ReindexedProfile 1
+    Set-ItemProperty $key SeparateProcess 0
+    Set-ItemProperty $key ServerAdminUI 0
+    Set-ItemProperty $key SharingWizardOn 0
+    Set-ItemProperty $key ShellViewReentered 1
+    Set-ItemProperty $key ShowCompColor 1
+    Set-ItemProperty $key ShowEncryptCompressedColor 1
+    Set-ItemProperty $key ShowInfoTip 1
+    Set-ItemProperty $key ShowStatusBar 1
+    Set-ItemProperty $key ShowStatusBar 1
+    Set-ItemProperty $key ShowSuperHidden 1
+    Set-ItemProperty $key ShowTypeOverlay 1
+    Set-ItemProperty $key Start_SearchFiles 2
+    Set-ItemProperty $key StoreAppsOnTaskbar 1
+    Set-ItemProperty $key TaskbarAnimations 1
+    Set-ItemProperty $key TaskbarSmallIcons 1
+    Set-ItemProperty $key WebView 1
     Stop-Process -processname explorer
     Start-Process explorer
 }
