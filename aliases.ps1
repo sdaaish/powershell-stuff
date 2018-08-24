@@ -4,6 +4,8 @@
 #New-Item alias:x -value "exit"
 #Set-Location ~
 
+Import-Module Get-ChildItemColor
+
 # Add the path to my powershell-scripts
 $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
 
@@ -11,6 +13,7 @@ $env:Path += ";$env:UserProfile\Repos\powershell-stuff"
 Remove-Item alias:curl 2>$null
 Remove-Item alias:wget 2>$null
 Remove-Item alias:diff -Force 2>$null
+Remove-Item alias:ls -Force 2>$null
 
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
@@ -66,8 +69,21 @@ function cdw {
 function cdv {
     Set-Location $Env:UserProfile\Vagrantdir
 }
+function ls {
+    if (Get-Module Get-ChildItemColor) {
+        Get-ChildItemColorFormatWide "$args"
+    }
+    else {
+        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+    }
+}
 function ll {
-    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+    if (Get-Module Get-ChildItemColor) {
+        Get-ChildItemColor "$args"
+    }
+    else {
+        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+    }
 }
 function lls {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
@@ -91,6 +107,11 @@ function ghl([string]$help) {
 # Shortcut to create an array
 Function ql {
     $args
+}
+
+# Equivalent of linux wc, word counts
+Function wc {
+    Get-Content "$args"| Measure-Object -Character -Line -Word| select lines,words,characters
 }
 
 # Show aliases online
