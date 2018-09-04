@@ -417,8 +417,8 @@ Function google-search {
 
 # Start hugo locally and fire up a webpage
 Function test-hugo {
-    Start-Job -ScriptBlock {hugo server --disableFastRender}
-    hugo server -D
+    Start-Job -ScriptBlock {& hugo server -D --disableFastRender}
+    Start-Process http://localhost:1313/
 }
 
 # Create a module base directory
