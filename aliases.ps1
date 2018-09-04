@@ -43,6 +43,7 @@ Set-Alias -Name lok -Value find-dropbox-conflicts
 Set-Alias -Name ra -Value resolve-address
 
 Set-alias -Name gts -Value Get-MyGitStatus
+Set-Alias -Name gtl -value Get-MyGitLog
 
 #Functions
 function .. {
@@ -218,6 +219,18 @@ function org-commit {
 # Alias for git status
 Function Get-MyGitStatus {
     git status -sb
+}
+# Alias for git log
+Function Get-MyGitLog {
+    param(
+        $path = ".",
+        $count = 40
+    )
+    $path = Convert-Path $path
+    if ( Test-Path $path -Type Leaf){
+        $path=Split-Path $path -Parent
+    }
+    git -C $path log --oneline --all --graph --decorate --max-count=$count
 }
 
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
