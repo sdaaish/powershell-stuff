@@ -470,3 +470,56 @@ Function New-ModuleDir {
     }
     New-ModuleManifest @manifest
 }
+
+# Fix for Outlook/Office that cannot open links in Windows 10,
+# and you don't want to install IE.
+# https://support.microsoft.com/sv-se/help/310049/hyperlinks-are-not-working-in-outlook
+# https://answers.microsoft.com/en-us/msoffice/forum/msoffice_outlook-mso_win10/outlook-2013-email-links-arent-working/7122799b-798e-4439-8108-69fa86900a16
+# And my preferred browser is Firefox.
+
+function fix-outlook-hyperlink-error {
+    [cmdletbinding()]
+
+    $admincheck = Test-Admin
+    if ( $admincheck ){
+        Write-Output "$env:USERNAME is admin"
+
+        # Create a list of htmlfiles
+        $htmlfiles =  @(
+            ".html",
+            ".htm",
+            ".shtm",
+            ".shtml"
+        )
+
+        # Changer the siffixes to be of type "htmlfile"
+        foreach($suffix in $htmlfiles){
+            $path = "HKCR:" + $suffix
+            Set-ItemProperty -Path $path -Name '(Default)' -Value "htmlfile"
+            Set-ItemProperty -Path $path -Name 'Content Type' -Value "text/html"
+            Set-ItemProperty -Path $path -Name 'PercievedType' -Value "text"
+        }
+
+        ### This part needs administrative privileges
+
+        # Create a PSDrive for HKCR if it doesn't exist
+        if (-not (Test-Path HKCR:)){
+            New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null
+        }
+
+        # Create the registry key and set its value to the preferred browser
+        New-Item HKCR:\htmlfile\shell\open\command -Force | Out-Null
+        New-ItemProperty -LiteralPath HKCR:\htmlfile\shell\open\command -Name '(Default)' -Value '"C:\Program Files\Mozilla Firefox\firefox.exe" -osint -url "%1"' -Force | Out-Null
+
+        # Print results
+        Write-Output "Changed settings to:"
+        foreach($suffix in $htmlfiles){
+            $path = "HKCR:" + $suffix
+            Get-ItemProperty -Path $path | Select-Object "PSPath","(default)","Content Type","PercievedType"
+        }
+        Get-ItemProperty -LiteralPath HKCR:\htmlfile\shell\open\command -Name '(Default)'| Select-Object "PSPath","(default)"
+    }
+    else {
+        Write-Output "You dont have administrative rights to change this!"
+    }
+}
