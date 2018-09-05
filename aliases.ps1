@@ -29,6 +29,7 @@ Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
 Set-Alias -name pwsh -value Find-pwsh
+Set-Alias -Name ql -Value New-List
 Set-Alias -name st -value Start-Transcript
 Set-Alias -name which -value Get-Command
 
@@ -106,7 +107,7 @@ function ghl([string]$help) {
     Get-Help -Name $help -ShowWindow
 }
 # Shortcut to create an array
-Function ql {
+Function New-List {
     $args
 }
 
