@@ -217,6 +217,15 @@ function org-commit {
     Pop-Location
 }
 
+# Check for admin
+function Test-Admin
+{
+    $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
+    $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+    $prp.IsInRole($adm)
+}
+
 # Alias for git status
 Function Get-MyGitStatus {
     git status -sb
