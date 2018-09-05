@@ -1,21 +1,21 @@
 <#
-	.SYNOPSIS
-	Script that adds "Notepad" as option in explorer "Open" contextual menu
+.SYNOPSIS
+Script that adds "Notepad" as option in explorer "Open" contextual menu
 
-	.DESCRIPTION
-	Requires that Notepad is installed. Otherwise change the URL for $Notepad.
+.DESCRIPTION
+Requires that Notepad is installed. Otherwise change the URL for $Notepad.
 
-	.NOTES
-	Problems and registry:
-	http://stackoverflow.com/questions/29267307/set-registry-key-to-open-notepad
+.NOTES
+Problems and registry:
+http://stackoverflow.com/questions/29267307/set-registry-key-to-open-notepad
 
-	Good Howto:
-	https://en.wikiversity.org/wiki/Windows_PowerShell/Registry
-#>	
+Good Howto:
+https://en.wikiversity.org/wiki/Windows_PowerShell/Registry
+#>
 
 # HKEY_CLASSES_ROOT is equal to HKLM:\Software\Classes
 $registryPath = 'HKLM:\Software\Classes\*\Shell\Notepad\Command'
-$Notepad = "C:\Windows\notepad.exe `"%1`""
+$Notepad = "C:\Windows\System32\notepad.exe `"%1`""
 
 # Test for admin privs
 function Test-Admin
