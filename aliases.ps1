@@ -17,7 +17,7 @@ Remove-Item alias:ls -Force 2>$null
 
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
-Set-Alias -Name alias -Value Get-Alias
+Set-Alias -Name alias -Value Search-Alias
 Set-Alias -Name crep -value ~\repos\powershell-stuff\check-repos.ps1
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
@@ -114,6 +114,20 @@ Function New-List {
 # Equivalent of linux wc, word counts
 Function wc {
     Get-Content "$args"| Measure-Object -Character -Line -Word| select lines,words,characters
+}
+
+# Search an alias or display all of them
+Function Search-Alias {
+    param (
+        [string]$alias = ""
+    )
+
+    if ($alias){
+        Get-Alias| Where ResolvedCommand -Match $alias
+    }
+    else {
+        Get-Alias
+    }
 }
 
 # Show aliases online
