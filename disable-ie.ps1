@@ -15,4 +15,15 @@ Put some notes here.
 .LINK
 #>
 
-Disable-WindowsOptionalFeature -Online -FeatureName Internet-Explorer-Optional-amd64 -NoRestart
+if (Test-Admin){
+    try {
+        Disable-WindowsOptionalFeature -Online -FeatureName Internet-Explorer-Optional-amd64 -NoRestart
+    }
+    catch {
+        "Internet Explorer is not installed"
+    }
+    finally {}
+}
+else {
+    "Admin privilege required to run this command."
+}
