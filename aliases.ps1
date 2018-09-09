@@ -496,7 +496,7 @@ function fix-outlook-hyperlink-error {
 
     $admincheck = Test-Admin
     if ( $admincheck ){
-        Write-Output "$env:USERNAME is admin"
+        Write-Output "User $env:USERNAME has admin rights."
 
         # Create a list of htmlfiles
         $htmlfiles =  @(
@@ -506,19 +506,19 @@ function fix-outlook-hyperlink-error {
             ".shtml"
         )
 
-        # Changer the siffixes to be of type "htmlfile"
-        foreach($suffix in $htmlfiles){
-            $path = "HKCR:" + $suffix
-            Set-ItemProperty -Path $path -Name '(Default)' -Value "htmlfile"
-            Set-ItemProperty -Path $path -Name 'Content Type' -Value "text/html"
-            Set-ItemProperty -Path $path -Name 'PercievedType' -Value "text"
-        }
-
         ### This part needs administrative privileges
 
         # Create a PSDrive for HKCR if it doesn't exist
         if (-not (Test-Path HKCR:)){
             New-PSDrive -Name HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT | Out-Null
+        }
+
+        # Change the suffixes to be of type "htmlfile"
+        foreach($suffix in $htmlfiles){
+            $path = "HKCR:" + $suffix
+            Set-ItemProperty -Path $path -Name '(Default)' -Value "htmlfile"
+            Set-ItemProperty -Path $path -Name 'Content Type' -Value "text/html"
+            Set-ItemProperty -Path $path -Name 'PercievedType' -Value "text"
         }
 
         # Create the registry key and set its value to the preferred browser
