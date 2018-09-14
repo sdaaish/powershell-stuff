@@ -537,3 +537,18 @@ function fix-outlook-hyperlink-error {
         Write-Output "You dont have administrative rights to change this!"
     }
 }
+
+# Get som Powershell books for reference, put them in ~\Documents.
+Function Get-Books {
+    $path = Convert-Path ~\Documents
+
+    if (Test-Path $path) {
+        # Lee Holmes
+        git -C $path clone https://resources.oreilly.com/examples/0636920024132.git "PowerShell CookBook Examples"
+        # Douglas Finke
+        git -C $path clone https://github.com/dfinke/powershell-for-developers.git "PowerShell for Developers"
+    }
+    else {
+        Write-Output "No such path: $path"
+    }
+}
