@@ -119,11 +119,11 @@ Function wc {
 # Search an alias or display all of them
 Function Search-Alias {
     param (
-        [string]$alias = ""
+        [string]$alias
     )
 
     if ($alias){
-        Get-Alias| Where ResolvedCommand -Match $alias
+        Get-Alias| Where DisplayName -Match $alias
     }
     else {
         Get-Alias
