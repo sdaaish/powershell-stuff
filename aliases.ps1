@@ -142,6 +142,11 @@ Function check-alias {
     Remove-Item $tmp
 }
 
+# Debug emacs
+Function emdi {
+    emacs.exe --debug-init
+}
+
 function emacs-client() {
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
