@@ -1,12 +1,12 @@
 # Place for functions
 
 # Docker
-Function doil {
+Function dkil {
     docker image ls
 }
-Function docl {
+Function dkcl {
     docker container ls
 }
-Function dops {
+Function dkps {
     docker ps
 }
