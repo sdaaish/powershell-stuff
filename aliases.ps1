@@ -165,6 +165,7 @@ function get-dns-suffix() {
 function reload-powershell-profile {
     . $profile.CurrentUserAllHosts
     . $DirScripts\aliases.ps1
+    . $DirScripts\functions.ps1
 }
 function show-profiles {
     $profile|Get-Member -MemberType NoteProperty

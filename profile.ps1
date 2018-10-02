@@ -33,3 +33,6 @@ if ($p.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)) 
 else {
     $Host.UI.RawUI.WindowTitle = "Powershell " + ($name)
 }
+
+. $DirScripts\aliases.ps1
+. $DirScripts\functions.ps1
