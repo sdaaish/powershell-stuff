@@ -25,6 +25,7 @@ Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emx -Value emacs-client
 Set-Alias -Name emacs -Value emacs-client
 Set-Alias -Name l -Value Get-Content
+Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
@@ -96,6 +97,14 @@ function llt {
 function now {
     get-date -Format yyyyMMdd-HH:mm:ss
 }
+Function disk-usage {
+    param(
+        $Path
+    )
+    Get-ChildItem -Path $Path -File -Recurse |
+      Measure-Object -Property Length -Sum
+}
+
 # Alias for help-command
 function gh([string]$help) {
     $ErrorActionPreference = "Ignore"
