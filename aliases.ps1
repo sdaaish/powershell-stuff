@@ -418,7 +418,7 @@ Function find-dropbox-conflicts {
 
 # Search bing for powershell examples
 # Bing has preview of powershell code which is nice
-Function bing-search-powershell {
+Function Search-PowershellBing {
     $search = "powershell+"
     $search += $args -join "+"
 
@@ -433,7 +433,7 @@ Function bing-search-powershell {
 }
 
 # Search google for stuff
-Function google-search {
+Function Search-Google {
     $search += $args -join "+"
 
     if($search){
@@ -441,6 +441,20 @@ Function google-search {
     }
     else {
         $uri = "https://www.google.com/search"
+    }
+
+    Start-Process $uri
+}
+
+# Search StackExchange for Emacs stuff
+Function Search-EmacsSX {
+    $search += $args -join "+"
+
+    if($search){
+        $uri ="https://emacs.stackexchange.com/search?q=" + "$search"
+    }
+    else {
+        $uri = "https://emacs.stackexchange.com/search"
     }
 
     Start-Process $uri
