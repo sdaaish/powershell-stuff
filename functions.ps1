@@ -47,3 +47,8 @@ Function Search-Censys {
 
     docker run --rm -e CENSYS_API_SECRET=$secret -e CENSYS_API_ID=$id --name censys sdaaish/censys_subdomain_finder $domain
 }
+# Runs shodan as container
+Function shodan {
+    $shodandir=Convert-Path ~/.shodan
+    docker run --rm -it -v ${shodandir}:/home/shodan/.shodan -e PAGER=cat sdaaish/shodan:latest $args
+}
