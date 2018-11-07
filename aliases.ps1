@@ -596,3 +596,15 @@ Function Get-Books {
         Write-Output "No such path: $path"
     }
 }
+
+# Install WSL
+# From https://blogs.msdn.microsoft.com/commandline/2018/11/05/whats-new-for-wsl-in-the-windows-10-october-2018-update/
+# For other distros, https://docs.microsoft.com/en-us/windows/wsl/install-manual
+Function Get-WSL {
+    Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile ~/Ubuntu.appx -UseBasicParsing
+    Add-Appx-Package -Path ~/Ubuntu.appx
+    RefreshEnv
+    Ubuntu1804 install --root
+    Ubuntu1804 run apt update
+    Ubuntu1804 run apt upgrade -y
+}
