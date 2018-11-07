@@ -49,6 +49,15 @@ Function Search-Censys {
 }
 # Runs shodan as container
 Function shodan {
-    $shodandir=Convert-Path ~/.shodan
+    $shodandir = "~/.shodan"
+    try {
+        $shodandir = Convert-Path $shodandir -ErrorAction Stop
+    }
+    catch {
+        $shodanfile = $shodandir + ".shodan"
+        New-Item -Path $shodandir -ItemType Directory
+        New-Item -Path $shodanfile  -ItemType File
+    }
+    "$shodandir"
     docker run --rm -it -v ${shodandir}:/home/shodan/.shodan -e PAGER=cat sdaaish/shodan:latest $args
 }
