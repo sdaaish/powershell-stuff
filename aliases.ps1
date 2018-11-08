@@ -273,6 +273,44 @@ Function Get-MyGitLog {
     git -C $path log --oneline --all --graph --decorate --max-count=$count
 }
 
+# Create a .gitattributes-file if it doesnt exist
+function Add-GitAttributesFile {
+
+    # Text to add in the file
+    $text = @"
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.c text
+*.h text
+
+# Declare files that will always have LF line endings on checkout.
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.psd1 text eol=lf
+*.psm1 text eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.png binary
+*.jpg binary
+"@
+
+    if (Test-Path -Path .git -PathType Container) {
+        if (-not (Test-Path -Path .gitattributes -PathType Leaf)){
+            Set-Content -Path .gitattributes -Value $text
+            Write-Output "Added a new .gitattributesfile"
+        }
+        else {
+            Write-Output "A .gitattributesfile already exists."
+        }
+    }
+    else {
+        Write-Output "Not a repository."
+    }
+}
+
 # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
 function fix-tty {
     $console.ForegroundColor = "white"
