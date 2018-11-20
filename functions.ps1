@@ -58,6 +58,5 @@ Function shodan {
         New-Item -Path $shodandir -ItemType Directory
         New-Item -Path $shodanfile  -ItemType File
     }
-    "$shodandir"
     docker run --rm -it -v ${shodandir}:/home/shodan/.shodan -e PAGER=cat sdaaish/shodan:latest $args
 }
