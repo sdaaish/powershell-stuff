@@ -436,13 +436,29 @@ function Get-HostToIP($hostname) {
 }
 
 # Do a DNS lookup
-function resolve-address($address) {
+function Resolve-Address($address) {
+
+    # Test if address is an IP
     try {
-        $ip = ([ipaddress]$address).IPAddressToString 
+        $ip = ([ipaddress]$address).IPAddressToString
+    }
+    catch {
+        # Otherwise check for a name
+        try {
+            ([System.Net.Dns]::GetHostByName($address)).
+            AddressList.
+            IPAddressToString
+        }
+        catch {
+        }
+    }
+
+    # Check the IP for a name
+    try {
+        ([System.Net.Dns]::GetHostByAddress($ip)).Hostname
     }
     catch {
     }
-    (Resolve-DnsName -DnsOnly $address -erroraction silentlycontinue)
 }
 
 # Find the path of powershell-core.
