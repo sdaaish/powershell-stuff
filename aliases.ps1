@@ -47,6 +47,8 @@ Set-Alias -Name ra -Value resolve-address
 Set-alias -Name gts -Value Get-MyGitStatus
 Set-Alias -Name gtl -value Get-MyGitLog
 
+Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
+
 #Functions
 function .. {
     cd ..
