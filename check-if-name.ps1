@@ -25,7 +25,8 @@
 #$hostname = ($env:ComputerName + "." + $env:UserDnsDomain).ToLower()
 $hostname = (Get-CIMInstance CIM_ComputerSystem).Name.ToLower()
 $primarydomain = (Get-CIMInstance CIM_ComputerSystem).Domain.ToLower()
-$interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
+$interface = (Get-NetAdapter| Select-Object Name,ifIndex,Status| Where Status -eq Up)
+
 # Stupid stuff, Primary DNS-suffix and Non Volatile Domain
 $domain= (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\").Domain
 $nvdomain = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\")."NV Domain"
@@ -36,12 +37,32 @@ $nvdomain = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Par
 "{0,-20}{1,-30}" -f "Primary nvdomain suffix = ","$nvdomain`n"
 
 # Get interfaces that are up and print the ip-address
-foreach  ($if in $interfaces) {
-    $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4).IPAddress
-    $ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6).IPAddress
+foreach  ($if in $interface) {
+
+    # Check for en IPv4 address for the interface
+    try {
+        $ipv4 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv4 -ErrorAction Stop).IPAddress 
+    }
+    catch {
+        $ipv4 = ""
+    }
+
+    # Check for en IPv6 address for the interface
+
+    try {
+        $ipv6 = (Get-NetIPAddress -ifIndex ($if).ifIndex -Type Unicast -AddressFamily IPv6 -ErrorAction Stop).IPAddress
+    }
+    catch {
+        $ipv6 = ""
+    }
+
     $ifName = ($if).Name
     $ifIndex = ($if).ifIndex
-    $conspecsuffix = (Get-DnsClient -InterfaceIndex $ifIndex).ConnectionSpecificSuffix
+
+    try {
+        $conspecsuffix = (Get-DnsClient -InterfaceIndex $ifIndex  -ErrorAction Stop).ConnectionSpecificSuffix
+    }
+    catch {}
 
     # If there is a domain suffix for interface, print it.
     if ($conspecsuffix) {
@@ -57,7 +78,12 @@ foreach  ($if in $interfaces) {
     }
 
     # Check for the reverse record in DNS
-    $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
+
+    try {
+        $dnshost = (Resolve-DnsName -Name $ipv4 -DnsOnly -ErrorAction Ignore).NameHost #Reverselookup
+    }
+    catch {}
+
     if ($dnshost) {
 	      $dnshost= $dnshost.ToLower()
 	      "{0,-54}{1,-3}{2,-40}" -f "Reverse DNS lookup for $ipv4"," = ", "$dnshost"
@@ -69,7 +95,7 @@ foreach  ($if in $interfaces) {
 	      # This part is probably dead
 	      catch {
 	          Write-Output "No name for $ipv4"
-	          Break
+	          #Break
 	      }
 	      # For every ip-address in the forward lookup, resolve to a name (reverse lookup)
 	      finally {
