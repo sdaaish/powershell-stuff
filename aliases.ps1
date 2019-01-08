@@ -668,4 +668,5 @@ Function Get-WSL {
     Ubuntu1804 install --root
     Ubuntu1804 run apt update
     Ubuntu1804 run apt upgrade -y
+    Remove-Item -Force ~/Ubuntu.appx
 }
