@@ -10,6 +10,10 @@ Function dkcl {
 Function dkps {
     docker ps
 }
+# Remove old images with none
+Function Remove-DockerNone {
+    docker image ls| ConvertFrom-Docker|? tag -Like "<none>"|% {docker rmi $_.ImageID}
+}
 
 # mitmproxy
 # https://hub.docker.com/r/mitmproxy/mitmproxy/
