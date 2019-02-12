@@ -12,27 +12,17 @@ $Host.UI.RawUI.WindowSize.height=70
 $Host.UI.RawUI.BufferSize.width=120
 $Host.UI.RawUI.BufferSize.height=5000
 
-# Color
-if ($host.UI.RawUI.WindowTitle -match "Administrator") {
-    # Admin colors
-    $host.UI.RawUI.BackgroundColor = "Darkred"
-    $host.UI.RawUI.ForegroundColor = "White"
-}
-else {
-    # Normal colors
-    $Host.UI.RawUI.BackgroundColor = "Gray"
-    $Host.UI.RawUI.ForegroundColor = "Black"
-}
-
-# Escape-colors
-$Host.PrivateData.VerboseForegroundColor = "white"
-$Host.PrivateData.VerboseBackgroundColor = "blue"
-$Host.PrivateData.WarningForegroundColor = "yellow"
-$Host.PrivateData.WarningBackgroundColor = "darkgreen"
-$Host.PrivateData.ErrorForegroundColor = "white"
-$Host.PrivateData.ErrorBackgroundColor = "red"
+# Info from https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
+# This works with 1.0 of Posh-Git
+Import-Module Posh-Git
+$GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
+$GitPromptSettings.DefaultPromptWriteStatusFirst = $true
+$GitPromptSettings.DefaultPromptPrefix = "`n"
+$GitPromptSettings.DefaultPromptBeforeSuffix.Text = '`n$([DateTime]::now.ToString("MM-dd HH:mm:ss"))'
+$GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor = 0xdaa520
+$GitPromptSettings.DefaultPromptSuffix = ' $((Get-History -Count 1).id + 1)$(" >" * ($nestedPromptLevel + 1)) '
 
 # Clear terminal
-Clear-Host
+#Clear-Host
 Write-Output "Hello ($name)!"
 
