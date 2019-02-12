@@ -678,3 +678,23 @@ Function Get-WSL {
     Ubuntu1804 run apt upgrade -y
     Remove-Item -Force ~/Ubuntu.appx
 }
+
+# Get Windows Colortool
+Function Install-ColorTool {
+    [cmdletbinding()]
+    Param (
+        $uri = "https://github.com/Microsoft/console/releases/download/1810.02002/ColorTool.zip",
+        $tmp =  "~\Downloads\ColorTool.zip"
+    )
+    $dest = Convert-Path "~/bin"
+    $start_time = Get-Date
+
+    Write-Verbose "Downloading $uri"
+    Invoke-WebRequest -Uri $uri -OutFile $tmp -UseBasicParsing
+
+    Expand-Archive $tmp $dest -Force
+    Write-Verbose "Extracted $tmp to $dest"
+
+    $time = $((Get-Date).subtract($start_time).seconds)
+    Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
+}
