@@ -49,6 +49,9 @@ Set-Alias -Name gtl -value Get-MyGitLog
 
 Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
 
+Set-Alias -Name dk -value 'docker.exe'
+Set-Alias -Name dc -value 'docker-compose.exe'
+
 #Functions
 function .. {
     cd ..
