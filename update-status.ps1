@@ -33,7 +33,7 @@ Function check-git {
         $cdir = (Convert-Path (Split-Path (${repodir} + "\" + ${dir})))
 
         #If it is a WSL directory, lxss, dont update since bad things happens.
-        if ($cdir -match "AppData\\local\\lxss" ) {
+        if ($cdir -match  "AppData\\local\\lxss" -or $cdir -match "\\Appdata\\local\\Packages" ) {
             Write-Host "Will not check git in $cdir`n" -ForegroundColor red
         }
         else {

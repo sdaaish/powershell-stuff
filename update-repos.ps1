@@ -34,7 +34,7 @@ Function check-git {
         $cdir = $cdir.Trim('\')
 
         #If it is a WSL directory, lxss, dont update since bad things happens.
-        if ($cdir -match "AppData\\local\\lxss" ) {
+        if ($cdir -match  "AppData\\local\\lxss" -or $cdir -match "\\Appdata\\local\\Packages" ) {
             Write-Host "Will not update git in $cdir`n" -ForegroundColor red
         }
         else {
