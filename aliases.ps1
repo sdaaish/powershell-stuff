@@ -674,11 +674,12 @@ Function Enable-WSL {
 # For other distros, https://docs.microsoft.com/en-us/windows/wsl/install-manual
 Function Get-WSL {
     Invoke-WebRequest -Uri "https://aka.ms/wsl-ubuntu-1804" -OutFile ~/Ubuntu.appx -UseBasicParsing
-    Add-Appx-Package -Path ~/Ubuntu.appx
+    Add-AppxPackage -Path ~/Ubuntu.appx
     RefreshEnv
     Ubuntu1804 install --root
     Ubuntu1804 run apt update
     Ubuntu1804 run apt upgrade -y
+    Ubuntu1804 run apt install -y git make
     Remove-Item -Force ~/Ubuntu.appx
 }
 
