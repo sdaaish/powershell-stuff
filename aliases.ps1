@@ -60,22 +60,22 @@ function ... {
     cd ..\..
 }
 function cdh {
-    Set-Location $Env:UserProfile\
+    Set-Location ~
 }
 function cdm {
-    Set-Location $Env:UserProfile\Videos
+    Set-Location ~\Videos
 }
 function cdr {
-    Set-Location $Env:UserProfile\Repos
+    Set-Location ~\repos
 }
 function cdrw {
-    Set-Location $Env:UserProfile\Work
+    Set-Location ~\Work
 }
 function cdw {
-    Set-Location $Env:UserProfile\Downloads
+    Set-Location ~\Downloads
 }
 function cdv {
-    Set-Location $Env:UserProfile\Vagrantdir
+    Set-Location ~\Vagrantdir
 }
 function ls {
     if (Get-Module Get-ChildItemColor) {
