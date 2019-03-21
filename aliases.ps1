@@ -244,9 +244,11 @@ function org-commit {
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
     Push-Location ~/Dropbox/emacs
-    git add bookmarks
-    git add org/*.org
-    git add org/*.org_archive
+    $files = @()
+    $files += Resolve-Path org/*.org
+    $files += Resolve-Path org/archive/*
+    $files += Resolve-Path bookmarks
+    git add $files
     git commit -m "Comitting changes $date"
     git push -q --all
     Pop-Location
