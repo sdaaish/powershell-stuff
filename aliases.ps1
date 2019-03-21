@@ -705,3 +705,13 @@ Function Install-ColorTool {
     $time = $((Get-Date).subtract($start_time).seconds)
     Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
 }
+
+# Install modules
+Function Install-MyModules {
+    Install-Module -Name Get-ChildItemColor -Scope CurrentUser
+    Install-Module -Name PSReadline -Scope CurrentUser
+    Install-Module -Name Posh-Git -Scope CurrentUser -AllowPrerelease -Force
+    Install-Module -Name BuildHelpers -Scope CurrentUser
+    Install-Module -Name PSScaffold -Scope CurrentUser
+    Install-Module -Name Posh-Docker -Scope CurrentUser
+}
