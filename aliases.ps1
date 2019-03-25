@@ -705,29 +705,13 @@ Function Install-ColorTool {
     $time = $((Get-Date).subtract($start_time).seconds)
     Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
 }
-# Install scoop.sh
-# Works in Powershell 6
-Function Get-Scoop {
-    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-}
 
-# Step buildnumber and store as UTF8
-Function My-Step {
-    #Requires -Modules Buildhelpers
-    param(
-        [Parameter(Mandatory=$True)]
-        $ModuleFile,
-        [ValidateSet("Build", "Major","Minor","Patch")]
-        [string]$Step = "Patch"
-    )
-    Import-module Buildhelpers
-
-    if (Test-Path $ModuleFile){
-        Step-ModuleVersion -Path $modulefile -By $Step
-        $content = Get-Content $modulefile
-        Set-Content -Path $modulefile -Value $content -Encoding UTF8
-    }
-    else {
-        Write-Host "No such file $ModuleFile"
-    }
+# Install modules
+Function Install-MyModules {
+    Install-Module -Name Get-ChildItemColor -Scope CurrentUser
+    Install-Module -Name PSReadline -Scope CurrentUser
+    Install-Module -Name Posh-Git -Scope CurrentUser -AllowPrerelease -Force
+    Install-Module -Name BuildHelpers -Scope CurrentUser
+    Install-Module -Name PSScaffold -Scope CurrentUser
+    Install-Module -Name Posh-Docker -Scope CurrentUser
 }
