@@ -701,3 +701,8 @@ Function Install-ColorTool {
     $time = $((Get-Date).subtract($start_time).seconds)
     Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
 }
+# Install scoop.sh
+# Works in Powershell 6
+Function Get-Scoop {
+    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+}
