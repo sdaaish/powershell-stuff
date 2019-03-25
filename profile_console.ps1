@@ -1,11 +1,12 @@
 <#
-        .SYNOPSIS
-        Default settings for Powershell Console
+.SYNOPSIS
+Default settings for Powershell Console
 
-        .NOTES
-
-	2017-01-16/SDAA
+.NOTES
+This user-profile loads after the common profile.
+2017-01-16/SDAA
 #>
+
 # Window and buffersize
 $Host.UI.RawUI.WindowSize.width=120
 $Host.UI.RawUI.WindowSize.height=70
