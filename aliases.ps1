@@ -713,12 +713,13 @@ Function My-Step {
     param(
         [Parameter(Mandatory=$True)]
         $ModuleFile,
-        $Patch = "Patch"
+        [ValidateSet("Build", "Major","Minor","Patch")]
+        [string]$Step = "Patch"
     )
     Import-module Buildhelpers
 
     if (Test-Path $ModuleFile){
-        Step-ModuleVersion -Path $modulefile -By $Patch
+        Step-ModuleVersion -Path $modulefile -By $Step
         $content = Get-Content $modulefile
         Set-Content -Path $modulefile -Value $content -Encoding UTF8
     }
