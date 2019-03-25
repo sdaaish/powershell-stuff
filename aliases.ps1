@@ -706,3 +706,23 @@ Function Install-ColorTool {
 Function Get-Scoop {
     iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 }
+
+# Step buildnumber and store as UTF8
+Function My-Step {
+    #Requires -Modules Buildhelpers
+    param(
+        [Parameter(Mandatory=$True)]
+        $ModuleFile,
+        $Patch = "Patch"
+    )
+    Import-module Buildhelpers
+
+    if (Test-Path $ModuleFile){
+        Step-ModuleVersion -Path $modulefile -By $Patch
+        $content = Get-Content $modulefile
+        Set-Content -Path $modulefile -Value $content -Encoding UTF8
+    }
+    else {
+        Write-Host "No such file $ModuleFile"
+    }
+}
