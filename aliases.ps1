@@ -60,22 +60,22 @@ function ... {
     cd ..\..
 }
 function cdh {
-    Set-Location $Env:UserProfile\
+    Set-Location ~
 }
 function cdm {
-    Set-Location $Env:UserProfile\Videos
+    Set-Location ~\Videos
 }
 function cdr {
-    Set-Location $Env:UserProfile\Repos
+    Set-Location ~\repos
 }
 function cdrw {
-    Set-Location $Env:UserProfile\Work
+    Set-Location ~\Work
 }
 function cdw {
-    Set-Location $Env:UserProfile\Downloads
+    Set-Location ~\Downloads
 }
 function cdv {
-    Set-Location $Env:UserProfile\Vagrantdir
+    Set-Location ~\Vagrantdir
 }
 function ls {
     if (Get-Module Get-ChildItemColor) {
@@ -244,9 +244,11 @@ function org-commit {
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
     Push-Location ~/Dropbox/emacs
-    git add bookmarks
-    git add org/*.org
-    git add org/*.org_archive
+    $files = @()
+    $files += Resolve-Path org/*.org
+    $files += Resolve-Path org/archive/*
+    $files += Resolve-Path bookmarks
+    git add $files
     git commit -m "Comitting changes $date"
     git push -q --all
     Pop-Location
@@ -674,11 +676,13 @@ Function Enable-WSL {
 # For other distros, https://docs.microsoft.com/en-us/windows/wsl/install-manual
 Function Get-WSL {
     Invoke-WebRequest -Uri "https://aka.ms/wsl-ubuntu-1804" -OutFile ~/Ubuntu.appx -UseBasicParsing
-    Add-Appx-Package -Path ~/Ubuntu.appx
+    Add-AppxPackage -Path ~/Ubuntu.appx
     RefreshEnv
     Ubuntu1804 install --root
     Ubuntu1804 run apt update
     Ubuntu1804 run apt upgrade -y
+    Ubuntu1804 run apt install -y git make
+    Ubuntu1804 run printf "[automount]\nroot = /\noptions = \"metadata\"\n" > /etc/wsl.conf
     Remove-Item -Force ~/Ubuntu.appx
 }
 
