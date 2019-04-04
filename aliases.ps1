@@ -742,3 +742,45 @@ Function My-Step {
         Write-Host "No such file $ModuleFile"
     }
 }
+# Starts VS Code with a profile. It creates a new profile if -Path dont exists
+Function Start-VSCode {
+    [cmdletbinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Path,
+        [Parameter(Mandatory)]
+        $Config,
+        [string[]]$File
+    )
+
+    if (Test-Path $Path){
+        Write-Verbose "Start VScode in $Path with profile=$Config"
+
+        $ext = Join-Path -Path $(Convert-Path $Path) -ChildPath $Config -AdditionalChildPath "ext"
+        $data = Join-Path -Path $(Convert-Path $Path) -ChildPath $Config -AdditionalChildPath "data"
+
+        Write-Verbose "Read extensions from: $ext"
+        Write-Verbose "Read user-data from: $data"
+
+        if (Get-Command code.cmd -ErrorAction SilentlyContinue){
+            Write-Verbose "Start VScode with file=$File"
+            & "code.cmd" --extensions-dir $ext --user-data-dir $data $File
+        }
+        else {
+            Write-Error "VS Code is not in current path."
+        }
+    }
+    else {
+        Write-Error "No such directory, $Path"
+    }
+
+}
+# Start VScode with a default settings
+Function vsd {
+    Start-VSCode -Path ~/repos/code -Config default $Args
+}
+
+# Start VScode with powershell settings
+Function vsp {
+    Start-VSCode -Path ~/repos/code -Config powershell $Args
+}
