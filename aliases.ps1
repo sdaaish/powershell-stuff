@@ -152,7 +152,7 @@ Function check-alias {
     Get-Alias|Sort-Object Definition|ConvertTo-Html -Property Name,Definition -Title "Powershell aliases"> $tmp
     Invoke-Item $tmp
     # Sleep before removal
-    Start-Sleep 2 
+    Start-Sleep 2
     Remove-Item $tmp
 }
 
@@ -566,7 +566,7 @@ Function New-ModuleDir {
     )
 
     $ModuleDir = "$Path\$ModuleName"
-    
+
     # Create the module and private function directories
     New-Item "$ModuleDir" -ItemType Directory
     New-Item "$ModuleDir\Private" -ItemType Directory
