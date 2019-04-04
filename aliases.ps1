@@ -742,7 +742,8 @@ Function My-Step {
         Write-Host "No such file $ModuleFile"
     }
 }
-# Starts VS Code with a profile. It creates a new profile if -Path dont exists
+
+# Starts VS Code with a profile. It creates a new profile if -Config don't exists
 Function Start-VSCode {
     [cmdletbinding()]
     param(
@@ -753,8 +754,18 @@ Function Start-VSCode {
         [string[]]$File
     )
 
+    Write-Verbose "Checking for VS Code."
+    if ($code = Get-Command code -ErrorAction SilentlyContinue){
+        $code = $code.source
+        Write-Verbose "VS Code executable is: $code"
+    }
+    else
+    {
+        Throw "VS Code is not in current path."
+    }
+
     if (Test-Path $Path){
-        Write-Verbose "Start VScode in $Path with profile=$Config"
+        Write-Verbose "Start VScode in $Path with profile: `'$Config`'"
 
         $ext = Join-Path -Path $(Convert-Path $Path) -ChildPath $Config -AdditionalChildPath "ext"
         $data = Join-Path -Path $(Convert-Path $Path) -ChildPath $Config -AdditionalChildPath "data"
@@ -762,25 +773,28 @@ Function Start-VSCode {
         Write-Verbose "Read extensions from: $ext"
         Write-Verbose "Read user-data from: $data"
 
-        if (Get-Command code.cmd -ErrorAction SilentlyContinue){
-            Write-Verbose "Start VScode with file=$File"
-            & "code.cmd" --extensions-dir $ext --user-data-dir $data $File
-        }
-        else {
-            Write-Error "VS Code is not in current path."
-        }
+        Write-Verbose "Start VScode with file: `'$File`'"
+        & $code --extensions-dir $ext --user-data-dir $data $File
     }
     else {
-        Write-Error "No such directory, $Path"
+        Throw "No such directory, $Path"
     }
-
 }
+
 # Start VScode with a default settings
 Function vsd {
-    Start-VSCode -Path ~/repos/code -Config default $Args
+    [cmdletbinding()]
+    param(
+        $File
+    )
+    Start-VSCode -Path ~/repos/code -Config default -File $File
 }
 
 # Start VScode with powershell settings
 Function vsp {
-    Start-VSCode -Path ~/repos/code -Config powershell $Args
+    [cmdletbinding()]
+    param(
+        $File
+    )
+    Start-VSCode -Path ~/repos/code -Config powershell -File $File
 }
