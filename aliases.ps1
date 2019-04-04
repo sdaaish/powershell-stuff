@@ -471,10 +471,10 @@ function Resolve-Address($address) {
 # Find the path of powershell-core.
 # If there are more versions, start the first one.
 Function find-pwsh {
-    $pwsh = Convert-Path (Get-Childitem '\Program Files\Powershell\*\Pwsh.exe')
-    $pwsh
-    if (Test-Path $pwsh){
-        & $pwsh[0]
+    $pwsh = Resolve-Path "\Program Files\Powershell\*\Pwsh.exe"
+    "$pwsh"
+    if (Test-Path $pwsh.path){
+        & $pwsh[0].path
     }
     else {
         Write-Host "No such file, $pwsh" -ForegroundColor Yellow
