@@ -93,6 +93,9 @@ function ll {
         Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
     }
 }
+function lla {
+    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
+}
 function lls {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
