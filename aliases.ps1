@@ -801,3 +801,40 @@ Function vsp {
     )
     Start-VSCode -Path ~/repos/code -Config powershell -File $File
 }
+
+# Lists extensions in VSCode profile
+Function Get-VSCodeExtensions {
+    [cmdletbinding()]
+    Param (
+        [Parameter(Mandatory)]
+        $Path
+    )
+
+    begin {
+        Write-Verbose "Checking for VS Code."
+        if ($code = Get-Command code -ErrorAction SilentlyContinue){
+            $code = $code.source
+            Write-Verbose "VS Code executable is: $code"
+        }
+        else
+        {
+            Throw "VS Code is not in current path."
+        }
+    }
+
+    process
+    {
+        $config=Get-ChildItem -Path $Path -Depth 0 -Directory -Exclude .git
+        Write-Verbose "Found following config: $config"
+
+        foreach($conf in $config){
+            $extdir = Join-Path -Path $conf -ChildPath ext
+            $userdir = Join-Path -Path $conf -ChildPath data
+            [string[]]$extension = code --extensions-dir $extdir --user-data-dir $userdir $File --list-extensions
+            "Config for $(Split-Path -Leaf $conf) has the following extensions:"
+            foreach($ext in $extension) {
+                "- $ext"
+            }
+        }
+    }
+}
