@@ -696,10 +696,14 @@ Function Get-WSL {
 # Get Windows Colortool
 Function Install-ColorTool {
     [cmdletbinding()]
-    Param (
-        $uri = "https://github.com/Microsoft/console/releases/download/1810.02002/ColorTool.zip",
-        $tmp =  "~\Downloads\ColorTool.zip"
-    )
+
+    param()
+
+    $tmp =  "~\Downloads\ColorTool.zip"
+    $terminal = Invoke-Restmethod "https://api.github.com/repos/Microsoft/Terminal/releases/latest"
+    $release = $terminal.tag_name
+    $uri = "https://github.com/microsoft/Terminal/releases/download/$release/ColorTool.zip"
+
     $dest = Convert-Path "~/bin"
     $start_time = Get-Date
 
