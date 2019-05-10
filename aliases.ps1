@@ -414,9 +414,13 @@ function my-taskmgr {
 }
 # Kill explorer and restart it
 function pse {
-    pskill -nobanner explorer
-    explorer
+    Get-Process -Name explorer|Stop-Process -force
     Write-Host "Explorer restarted"
+}
+
+# show top 10 processes regarding cpu usage
+Function top {
+    Get-Process| ? cpu -gt 5|Sort-Object cpu -Descending| Select-Object -First 10
 }
 
 # Shutdown the computer
