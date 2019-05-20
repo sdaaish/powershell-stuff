@@ -33,7 +33,7 @@ Function mitmproxy {
 Function Search-Censys {
     param (
         $domain,
-        $apifile = "~\.settings\censys.api"
+        $apifile = "~/.settings/censys.api"
     )
 
     try {
