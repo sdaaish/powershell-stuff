@@ -93,6 +93,9 @@ function ll {
         Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
     }
 }
+function lla {
+    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
+}
 function lls {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
@@ -411,9 +414,13 @@ function my-taskmgr {
 }
 # Kill explorer and restart it
 function pse {
-    pskill -nobanner explorer
-    explorer
+    Get-Process -Name explorer|Stop-Process -force
     Write-Host "Explorer restarted"
+}
+
+# show top 10 processes regarding cpu usage
+Function top {
+    Get-Process| ? cpu -gt 5|Sort-Object cpu -Descending| Select-Object -First 10
 }
 
 # Shutdown the computer
@@ -689,10 +696,14 @@ Function Get-WSL {
 # Get Windows Colortool
 Function Install-ColorTool {
     [cmdletbinding()]
-    Param (
-        $uri = "https://github.com/Microsoft/console/releases/download/1810.02002/ColorTool.zip",
-        $tmp =  "~\Downloads\ColorTool.zip"
-    )
+
+    param()
+
+    $tmp =  "~\Downloads\ColorTool.zip"
+    $terminal = Invoke-Restmethod "https://api.github.com/repos/Microsoft/Terminal/releases/latest"
+    $release = $terminal.tag_name
+    $uri = "https://github.com/microsoft/Terminal/releases/download/$release/ColorTool.zip"
+
     $dest = Convert-Path "~/bin"
     $start_time = Get-Date
 
@@ -797,4 +808,41 @@ Function vsp {
         $File
     )
     Start-VSCode -Path ~/repos/code -Config powershell -File $File
+}
+
+# Lists extensions in VSCode profile
+Function Get-VSCodeExtensions {
+    [cmdletbinding()]
+    Param (
+        [Parameter(Mandatory)]
+        $Path
+    )
+
+    begin {
+        Write-Verbose "Checking for VS Code."
+        if ($code = Get-Command code -ErrorAction SilentlyContinue){
+            $code = $code.source
+            Write-Verbose "VS Code executable is: $code"
+        }
+        else
+        {
+            Throw "VS Code is not in current path."
+        }
+    }
+
+    process
+    {
+        $config=Get-ChildItem -Path $Path -Depth 0 -Directory -Exclude .git
+        Write-Verbose "Found following config: $config"
+
+        foreach($conf in $config){
+            $extdir = Join-Path -Path $conf -ChildPath ext
+            $userdir = Join-Path -Path $conf -ChildPath data
+            [string[]]$extension = code --extensions-dir $extdir --user-data-dir $userdir $File --list-extensions
+            "Config for $(Split-Path -Leaf $conf) has the following extensions:"
+            foreach($ext in $extension) {
+                "- $ext"
+            }
+        }
+    }
 }
