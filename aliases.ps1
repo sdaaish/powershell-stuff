@@ -29,10 +29,10 @@ Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
-Set-Alias -name pwsh -value Find-pwsh
+Set-Alias -Name pwsh -value Find-pwsh
 Set-Alias -Name ql -Value New-List
-Set-Alias -name st -value Start-Transcript
-Set-Alias -name which -value Get-Command
+Set-Alias -Name st -value Start-Transcript
+Set-Alias -Name which -value Get-Command
 Set-Alias -Name gs -Value Get-CommandSyntax
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
@@ -104,7 +104,7 @@ function llt {
     Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
 }
 function now {
-    get-date -Format yyyyMMdd-HH:mm:ss
+    Get-Date -Format yyyyMMdd-HH:mm:ss
 }
 Function disk-usage {
     param(
@@ -177,7 +177,7 @@ function emacs-client() {
     }
 }
 # Show dns search suffix
-function get-dns-suffix() {
+function Get-dns-suffix() {
     (Get-DnsClientGlobalSetting).SuffixSearchList
 }
 function reload-powershell-profile {
@@ -333,7 +333,7 @@ function keybase {
     & $prg $args
 }
 # Checks for proxy settings
-function get-proxy {
+function Get-proxy {
     $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
     $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
     $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
@@ -352,7 +352,7 @@ function get-proxy {
 
 }
 # Display current dns-servers for active interfaces
-Function get-dns-servers {
+Function Get-dns-servers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach ($if in $interfaces){
         $dnsserver = (Get-DNSClientServerAddress -InterfaceIndex $if.ifIndex)
