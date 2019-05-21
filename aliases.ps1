@@ -33,6 +33,7 @@ Set-Alias -name pwsh -value Find-pwsh
 Set-Alias -Name ql -Value New-List
 Set-Alias -name st -value Start-Transcript
 Set-Alias -name which -value Get-Command
+Set-Alias -Name gs -Value Get-CommandSyntax
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
 Set-Alias -Name kb -Value keybase
@@ -845,4 +846,11 @@ Function Get-VSCodeExtensions {
             }
         }
     }
+}
+Function Get-CommandSyntax {
+    [cmdletbinding()]
+    Param (
+        $command
+    )
+    Get-Command $command -Syntax
 }
