@@ -53,6 +53,7 @@ Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
 Set-Alias -Name dk -Value 'docker.exe'
 Set-Alias -Name dc -Value 'docker-compose.exe'
 
+Set-Alias -Name ci -Value code-insiders
 
 #Functions
 function .. {
