@@ -1,7 +1,7 @@
 # Aliases
 
 #New-Alias -Name np -Value C:\Windows\System32\notepad.exe
-#New-Item alias:x -value "exit"
+#New-Item alias:x -Value "exit"
 #Set-Location ~
 
 Import-Module Get-ChildItemColor
@@ -18,7 +18,7 @@ Remove-Item alias:ls -Force 2>$null
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Search-Alias
-Set-Alias -Name crep -value ~\repos\powershell-stuff\check-repos.ps1
+Set-Alias -Name crep -Value ~\repos\powershell-stuff\check-repos.ps1
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
 Set-Alias -Name em -Value emacs-client
@@ -29,10 +29,10 @@ Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
-Set-Alias -Name pwsh -value Find-pwsh
+Set-Alias -Name pwsh -Value Find-pwsh
 Set-Alias -Name ql -Value New-List
-Set-Alias -Name st -value Start-Transcript
-Set-Alias -Name which -value Get-Command
+Set-Alias -Name st -Value Start-Transcript
+Set-Alias -Name which -Value Get-Command
 Set-Alias -Name gs -Value Get-CommandSyntax
 
 Set-Alias -Name gnc -Value Get-NetConnectionProfile
@@ -46,12 +46,13 @@ Set-Alias -Name lok -Value find-dropbox-conflicts
 Set-Alias -Name ra -Value resolve-address
 
 Set-alias -Name gts -Value Get-MyGitStatus
-Set-Alias -Name gtl -value Get-MyGitLog
+Set-Alias -Name gtl -Value Get-MyGitLog
 
 Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
 
-Set-Alias -Name dk -value 'docker.exe'
-Set-Alias -Name dc -value 'docker-compose.exe'
+Set-Alias -Name dk -Value 'docker.exe'
+Set-Alias -Name dc -Value 'docker-compose.exe'
+
 
 #Functions
 function .. {
