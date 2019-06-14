@@ -230,8 +230,38 @@ function check-software {
 }
 # Check windows optional packages
 Function check-packages {
-    Get-WindowsOptionalFeature -online|select FeatureName, State| where state -eq Enabled
+    [cmdletbinding()]
+    Param (
+        [switch]$Disabled
+    )
+
+    if ($Disabled){
+        $state = "Disabled"
+    }
+    else {
+        $state = "Enabled"
+    }
+
+    Get-WindowsOptionalFeature -online|
+      where state -eq $state|
+      select FeatureName, State|
+      SOrt-Object -Property Featurename
 }
+
+# Disable legacy features
+Function Disable-LegacyFeatures {
+    $features =  @(
+        "internet-explorer-optional-amd64"
+        "MicrosoftWindowsPowerShellV2Root"
+        "MicrosoftWindowsPowerShellV2"
+        "SMB1Protocol"
+    )
+    foreach ($feat in $features){
+        Write-Output "Disabling $feat"
+        Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName $feat
+    }
+}
+
 # Package mgmt functions
 function apc($application) {
     choco search $application
@@ -679,6 +709,11 @@ Function Get-Books {
 # Enables WSL
 Function Enable-WSL {
     Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
+}
+
+Function Enable-HyperV {
+    Enable-WindowsOptionalFeature -Online -FeatureName containers -All -NoRestart
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
 }
 
 # Install WSL
