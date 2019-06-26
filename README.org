@@ -1,0 +1,35 @@
+* powershell-stuff
+  :PROPERTIES:
+  :CUSTOM_ID: powershell-stuff
+  :END:
+
+Various powershellscripts.
+
+** Create a Powershell profile
+    :PROPERTIES:
+    :CUSTOM_ID: create-a-powershell-profile
+    :END:
+
+Check if you have a Powershell profile with =Test-Path $profile=. If you
+don't have that, the output is false, initialise the file with:
+#+BEGIN_EXAMPLE
+    New-Item -type file -force $profile
+    notepad $profile
+#+END_EXAMPLE
+
+Content of that file should be:
+#+BEGIN_EXAMPLE
+    $DirScripts = "$env:Userprofile\Repos\powershell-stuff"
+    . "$DirScripts\profile.ps1"
+#+END_EXAMPLE
+if you have your files in ~Repos/Powershell~ in your home-directory.
+** Themes
+There are different tools to chosse from regarding to colorthemes.
+- Colortool
+- concfg
+- PSConSoleTheme
+- Base16
+- And manually changing color with powershell.
+
+I'm using different methods at the moment, a bit indecisive.
+
