@@ -789,6 +789,12 @@ Function Get-Scoop {
     iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 }
 
+# Install powershell core
+# From: https://www.thomasmaurer.ch/2019/03/how-to-install-and-update-powershell-6/
+Function Install-PowershellCore {
+    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
+}
+
 # Step buildnumber and store as UTF8
 Function My-Step {
     #Requires -Modules Buildhelpers
