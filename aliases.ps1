@@ -727,7 +727,7 @@ Function Get-WSL {
     Ubuntu1804 run apt update
     Ubuntu1804 run apt upgrade -y
     Ubuntu1804 run apt install -y git make
-    Ubuntu1804 run printf "[automount]\nroot = /\noptions = \"metadata\"\n" > /etc/wsl.conf
+    Ubuntu1804 run "printf '[automount]\nroot = /\noptions = \U022metadata\U022\n' > ~/etc/wsl.conf"
     Remove-Item -Force ~/Ubuntu.appx
 }
 
