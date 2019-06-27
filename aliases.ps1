@@ -785,7 +785,7 @@ Function Install-MyModules {
 
 # Install scoop.sh
 # Works in Powershell 6
-Function Get-Scoop {
+Function Install-Scoop {
     iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 }
 
