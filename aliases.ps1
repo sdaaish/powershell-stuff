@@ -729,10 +729,10 @@ Function Install-WSL {
     )
 
     # Download the file without displaying progress
-    $ProgressPreference = SilentlyContinue
+    $ProgressPreference = "SilentlyContinue"
     Write-Verbose "Downloading..."
     Invoke-WebRequest -Uri "https://aka.ms/wsl-ubuntu-1804" -OutFile $Path -UseBasicParsing
-    $ProgressPreference = Continue
+    $ProgressPreference = "Continue"
 
     Write-Verbose "Installing package $Path"
     Add-AppxPackage -Path $Path
@@ -771,22 +771,6 @@ Function Install-ColorTool {
 
     $time = $((Get-Date).subtract($start_time).seconds)
     Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
-}
-
-# Install modules
-Function Install-MyModules {
-    Install-Module -Name Get-ChildItemColor -Scope CurrentUser
-    Install-Module -Name PSReadline -Scope CurrentUser
-    Install-Module -Name Posh-Git -Scope CurrentUser -AllowPrerelease -Force
-    Install-Module -Name BuildHelpers -Scope CurrentUser
-    Install-Module -Name PSScaffold -Scope CurrentUser
-    Install-Module -Name Posh-Docker -Scope CurrentUser
-}
-
-# Install scoop.sh
-# Works in Powershell 6
-Function Install-Scoop {
-    iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 }
 
 # Install powershell core
