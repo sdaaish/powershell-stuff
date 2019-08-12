@@ -456,6 +456,11 @@ Function top {
     Get-Process| ? cpu -gt 5|Sort-Object cpu -Descending| Select-Object -First 10
 }
 
+# Show filehash for all executables running
+function Get-ProcessHash {
+    Get-Process|Get-Item -ErrorAction Ignore| Get-FileHash|Select-Object Path,Hash| Sort-Object -Property Path -Unique
+}
+
 # Shutdown the computer
 Function my-shutdown {
     & shutdown.exe /s /t 1
