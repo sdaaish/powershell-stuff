@@ -1,6 +1,7 @@
 # Install modules
 Function Install-MyModules {
     [cmdletbinding()]
+    param()
     Install-Module -Name Get-ChildItemColor -Scope CurrentUser
     Install-Module -Name PSReadline -Scope CurrentUser
     Install-Module -Name Posh-Git -Scope CurrentUser -AllowPrerelease -Force
