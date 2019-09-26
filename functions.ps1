@@ -10,9 +10,17 @@ Function dkcl {
 Function dkps {
     docker ps
 }
+# List docker containers
+Function Get-DockerContainer {
+    docker container ls --all|ConvertFrom-Docker
+}
+# List docker images
+Function Get-DockerImage {
+    docker image ls|ConvertFrom-Docker
+}
 # Remove old images with none
 Function Remove-DockerNone {
-    docker image ls| ConvertFrom-Docker|? tag -Like "<none>"|% {docker rmi $_.ImageID}
+    docker image ls| ConvertFrom-Docker|? tag -Like "<none>"|% {docker image rm $_.ImageID}
 }
 
 # mitmproxy
