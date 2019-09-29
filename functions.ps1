@@ -20,7 +20,8 @@ Function Get-DockerImage {
 }
 # Remove old images with none
 Function Remove-DockerNone {
-    docker image ls| ConvertFrom-Docker|? tag -Like "<none>"|% {docker image rm $_.ImageID}
+    Get-DockerImage|? tag -Like "<none>"|% {docker image rm $_.ImageID}
+}
 }
 
 # mitmproxy
