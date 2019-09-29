@@ -22,6 +22,10 @@ Function Get-DockerImage {
 Function Remove-DockerNone {
     Get-DockerImage|? tag -Like "<none>"|% {docker image rm $_.ImageID}
 }
+# Upgrade docker images
+Function Update-DockerImage {
+    Get-DockerImage |
+      Foreach-Object {docker pull $_.Repository}
 }
 
 # mitmproxy
