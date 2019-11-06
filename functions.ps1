@@ -30,16 +30,36 @@ Function Update-DockerImage {
 
 # mitmproxy
 # https://hub.docker.com/r/mitmproxy/mitmproxy/
-Function mitmproxy {
+Function Start-MitmProxy {
+    [cmdletbinding()]
+    Param (
+        [Parameter(Mandatory)]
+        $Path = "$env:USERPROFILE/Downloads",
+        [int]$LocalPort = 8080,
+        [string[]]$MitmOpts
+    )
+
     try {
-        Test-Path ~/.mitmproxy -PathType Container|out-null
+        Test-Path ~/.mitmproxy -PathType Container|Out-Null
     }
     catch {
         New-Item -Path ~/.mitmproxy -ItemType Directory
     }
-    Write-Output "Starting the mitmproxy on port 8080"
-    $mitmconfig = Convert-Path ~/.mitmproxy
-    docker run --rm -it -v ${mitmconfig}:/home/mitmproxy/.mitmproxy -p 127.0.0.1:8080:8080 mitmproxy/mitmproxy mitmproxy ssl-insecure
+    Write-Verbose "Starting mitmproxy on port $LocalPort"
+    $MitmConfig = Convert-Path ~/.mitmproxy
+    $Download = Convert-Path $Path
+    $EXE = "docker"
+
+    # Define parameters
+    $params = "run","--rm","-it"
+    $params += "-v", "$($MitmConfig -replace '\\','/'):/home/mitmproxy/.mitmproxy"
+    $params += "-v", "$($Download -replace '\\','/'):/home/mitmproxy/tmp"
+    $params += "-p", "127.0.0.1:${LocalPort}:8080"
+    $params += "mitmproxy/mitmproxy", "mitmproxy", "${MitmOpts}"
+
+    Write-Verbose "docker $params"
+    pause
+    & $EXE @params
 }
 
 # Censys domain lookup
