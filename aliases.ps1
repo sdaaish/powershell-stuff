@@ -912,14 +912,14 @@ function Send-ToTeams {
     [cmdletbinding()]
     param (
         [Parameter(Mandatory=$true)]
-        [string]$webhook,
+        [string]$WebHook,
         [Parameter(Mandatory=$true)]
-        [string]$text
+        [string]$Text
     )
 
     $payload = @{
-        "text" = $text
+        "text" = $Text
     }
     $json = ConvertTo-Json $payload
-    Invoke-RestMethod -Method post -ContentType 'Application/Json' -Body $json -Uri $webhook
+    Invoke-RestMethod -Method Post -ContentType "application/json;charset=UTF-8" -Body $json -Uri $WebHook
 }
