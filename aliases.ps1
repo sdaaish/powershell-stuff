@@ -908,3 +908,18 @@ Function Get-CommandSyntax {
     )
     Get-Command $command -Syntax
 }
+function Send-ToTeams {
+    [cmdletbinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$WebHook,
+        [Parameter(Mandatory=$true)]
+        [string]$Text
+    )
+
+    $payload = @{
+        "text" = $Text
+    }
+    $json = ConvertTo-Json $payload
+    Invoke-RestMethod -Method Post -ContentType "application/json;charset=UTF-8" -Body $json -Uri $WebHook
+}
