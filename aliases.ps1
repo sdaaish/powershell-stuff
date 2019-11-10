@@ -42,6 +42,7 @@ Set-Alias -Name yodl -Value youtube-dl
 Set-Alias -Name lll -Value Find-Links
 
 Set-Alias -Name lok -Value find-dropbox-conflicts
+Set-Alias -Name loo -Value find-onedrive-conflicts
 
 Set-Alias -Name ra -Value resolve-address
 
@@ -280,7 +281,7 @@ function api {
 function org-commit {
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
-    Push-Location ~/Dropbox/emacs
+    Push-Location ~/OneDrive/emacs
     $files = @()
     $files += Resolve-Path org/*.org
     $files += Resolve-Path org/archive/*
@@ -527,9 +528,13 @@ Function find-pwsh {
     }
 }
 
-# Find orgmode conflicts in Dropbox
+# Find conflicts in Dropbox
 Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
+}
+# Find conflicts in Onedrive
+Function find-onedrive-conflicts {
+    Get-ChildItem -r -Path ~/OneDrive -Name *konflikt*
 }
 
 # Search bing for powershell examples
