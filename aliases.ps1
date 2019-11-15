@@ -931,7 +931,7 @@ Function Ignore-SelfSignedCerts {
     }
 
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-
+}
 function Send-ToTeams {
     [cmdletbinding()]
     param (

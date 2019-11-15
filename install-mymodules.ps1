@@ -9,19 +9,21 @@ Function Install-MyModules {
         "BuildHelpers"
         "PSScaffold"
         "Posh-Docker"
-    )
-
-    $BetaModules = @(
         "Posh-Git"
     )
 
-    foreach ($module in $StableModules){
-        Write-Host "Installing module $module"
-        Install-Module -Name $module -Scope CurrentUser
-    }
-
-    foreach ($module in $BetaModules){
-        Write-Host "Installing module $module"
-        Install-Module -Name $module -Scope CurrentUser -AllowPrerelease -Force
-    }
+    $BetaModules = @(
+    )
 }
+Set-PSRepository -name PSGallery -InstallationPolicy Trusted
+
+foreach ($module in $StableModules){
+    Write-Host "Installing module $module"
+    Install-Module -Name $module -Scope CurrentUser
+}
+
+foreach ($module in $BetaModules){
+    Write-Host "Installing module $module"
+    Install-Module -Name $module -Scope CurrentUser -AllowPrerelease -Force
+}
+
