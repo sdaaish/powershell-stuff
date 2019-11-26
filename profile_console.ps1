@@ -16,12 +16,17 @@ $Host.UI.RawUI.BufferSize.height=5000
 # Info from https://github.com/dahlbyk/posh-git/wiki/Customizing-Your-PowerShell-Prompt
 # This works with 1.0 of Posh-Git
 Import-Module Posh-Git
-$GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
-$GitPromptSettings.DefaultPromptWriteStatusFirst = $true
-$GitPromptSettings.DefaultPromptPrefix = "`n"
-$GitPromptSettings.DefaultPromptBeforeSuffix.Text = '`n$([DateTime]::now.ToString("MM-dd HH:mm:ss"))'
-$GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor = 0xdaa520
-$GitPromptSettings.DefaultPromptSuffix = ' $((Get-History -Count 1).id + 1)$(" >" * ($nestedPromptLevel + 1)) '
+
+# Oh-my-PosH https://github.com/JanDeDobbeleer/oh-my-posh
+Import-Module oh-my-posh
+Set-Theme Paradox
+
+# $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
+# $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
+# $GitPromptSettings.DefaultPromptPrefix = "`n"
+# $GitPromptSettings.DefaultPromptBeforeSuffix.Text = '`n$([DateTime]::now.ToString("MM-dd HH:mm:ss"))'
+# $GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor = 0xdaa520
+# $GitPromptSettings.DefaultPromptSuffix = ' $((Get-History -Count 1).id + 1)$(" >" * ($nestedPromptLevel + 1)) '
 
 # Clear terminal
 #Clear-Host
