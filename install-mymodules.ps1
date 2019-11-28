@@ -14,6 +14,7 @@ Function Install-MyModules {
     )
 
     $BetaModules = @(
+        "PSReadLine"
     )
 
     Set-PSRepository -name PSGallery -InstallationPolicy Trusted
@@ -25,7 +26,7 @@ Function Install-MyModules {
 
     foreach ($module in $BetaModules){
         Write-Host "Installing module $module"
-        Install-Module -Name $module -Scope CurrentUser -AllowPrerelease -Force
+        Install-Module -Name $module -Scope CurrentUser -AllowPrerelease -Force -SkipPublisherCheck
     }
 
 }
