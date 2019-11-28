@@ -18,6 +18,6 @@ $fonts = @(
 )
 
 foreach($font in $fonts){
-    Write-Host "Installing $font""
+    Write-Host "Installing $font"
     sudo scoop install --global $font
 }
