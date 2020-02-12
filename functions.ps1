@@ -97,3 +97,22 @@ Function shodan {
     }
     docker run --rm -it -v ${shodandir}:/home/shodan/.shodan -e PAGER=cat sdaaish/shodan:latest $args
 }
+
+# Starts local portainer image with docker
+# Based on this: https://lemariva.com/blog/2018/05/tutorial-portainer-for-local-docker-environments-on-windows-10
+# The above dont work on my machine, however this does:
+# https://github.com/Microsoft/Docker.DotNet/issues/109
+# This don't need any firewall-rules to work but depends on Go
+Function Start-Portainer {
+    try {
+        docker volume ls| ConvertFrom-Docker| Where-Object Volumename -like portainer_data
+    }
+    catch {
+        docker volume create portainer_data
+    }
+
+    # Starts the proxy before portainer
+    # https://github.com/sdaaish/golang-tools/tree/master/tcpproxy
+    Start-Process Resolve-Path ~\go\bin\tcpproxy.exe -WindowStyle Hidden
+    docker run -p 9000:9000 -v portainer_data:/data portainer/portainer -H tcp://10.0.75.1:2375
+}
