@@ -29,7 +29,6 @@ Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
-Set-Alias -Name pwsh -Value Find-pwsh
 Set-Alias -Name ql -Value New-List
 Set-Alias -Name st -Value Start-Transcript
 Set-Alias -Name which -Value Get-Command
@@ -48,8 +47,6 @@ Set-Alias -Name ra -Value resolve-address
 
 Set-alias -Name gts -Value Get-MyGitStatus
 Set-Alias -Name gtl -Value Get-MyGitLog
-
-Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
 
 Set-Alias -Name dk -Value 'docker'
 Set-Alias -Name dco -Value 'docker-compose'
