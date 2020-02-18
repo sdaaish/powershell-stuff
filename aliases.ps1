@@ -29,7 +29,6 @@ Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
 Set-Alias -Name poff -Value my-shutdown
 Set-Alias -Name poffr -Value my-reboot
-Set-Alias -Name pwsh -Value Find-pwsh
 Set-Alias -Name ql -Value New-List
 Set-Alias -Name st -Value Start-Transcript
 Set-Alias -Name which -Value Get-Command
@@ -42,13 +41,12 @@ Set-Alias -Name yodl -Value youtube-dl
 Set-Alias -Name lll -Value Find-Links
 
 Set-Alias -Name lok -Value find-dropbox-conflicts
+Set-Alias -Name loo -Value find-onedrive-conflicts
 
 Set-Alias -Name ra -Value resolve-address
 
 Set-alias -Name gts -Value Get-MyGitStatus
 Set-Alias -Name gtl -Value Get-MyGitLog
-
-Set-Alias -Name tshark -Value 'C:\Program Files\Wireshark\tshark.exe'
 
 Set-Alias -Name dk -Value 'docker'
 Set-Alias -Name dco -Value 'docker-compose'
@@ -280,7 +278,7 @@ function api {
 function org-commit {
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
-    Push-Location ~/Dropbox/emacs
+    Push-Location ~/OneDrive/emacs
     $files = @()
     $files += Resolve-Path org/*.org
     $files += Resolve-Path org/archive/*
@@ -527,9 +525,13 @@ Function find-pwsh {
     }
 }
 
-# Find orgmode conflicts in Dropbox
+# Find conflicts in Dropbox
 Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
+}
+# Find conflicts in Onedrive
+Function find-onedrive-conflicts {
+    Get-ChildItem -r -Path ~/OneDrive -Name *konflikt*
 }
 
 # Search bing for powershell examples
@@ -946,4 +948,21 @@ function Send-ToTeams {
     }
     $json = ConvertTo-Json $payload
     Invoke-RestMethod -Method Post -ContentType "application/json;charset=UTF-8" -Body $json -Uri $WebHook
+}
+# Remove old versions of scoop packages
+Function Remove-ScoopExtraVersion {
+
+    Write-Host "Removing extra *User* app versions."
+    $Apps = Get-ChildItem ~/scoop/apps
+    foreach($app in $Apps){
+        scoop cleanup $app.name
+    }
+
+    if (Test-Admin) {
+        Write-Host "Removing extra *Global* app versions."
+        $Apps = Get-ChildItem /ProgramData/scoop/apps
+        foreach($app in $Apps){
+            scoop cleanup -g $app.name
+        }
+    }
 }
