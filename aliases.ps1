@@ -247,20 +247,6 @@ Function check-packages {
       SOrt-Object -Property Featurename
 }
 
-# Disable legacy features
-Function Disable-LegacyFeatures {
-    $features =  @(
-        "internet-explorer-optional-amd64"
-        "MicrosoftWindowsPowerShellV2Root"
-        "MicrosoftWindowsPowerShellV2"
-        "SMB1Protocol"
-    )
-    foreach ($feat in $features){
-        Write-Output "Disabling $feat"
-        Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName $feat
-    }
-}
-
 # Package mgmt functions
 function apc($application) {
     choco search $application
@@ -480,51 +466,6 @@ function Find-Links([string]$path=".") {
     Get-ChildItem $path -ErrorAction SilentlyContinue| ?{$_.Linktype}| Select-Object FullName, Target,LastWriteTime,LinkType
 }
 
-# Get IP address for a hostname
-function Get-HostToIP($hostname) {
-    $result = [system.Net.Dns]::GetHostByName($hostname)
-    $result.AddressList | ForEach-Object {$_.IPAddressToString }
-}
-
-# Do a DNS lookup
-function Resolve-Address($address) {
-
-    # Test if address is an IP
-    try {
-        $ip = ([ipaddress]$address).IPAddressToString
-    }
-    catch {
-        # Otherwise check for a name
-        try {
-            ([System.Net.Dns]::GetHostByName($address)).
-            AddressList.
-            IPAddressToString
-        }
-        catch {
-        }
-    }
-
-    # Check the IP for a name
-    try {
-        ([System.Net.Dns]::GetHostByAddress($ip)).Hostname
-    }
-    catch {
-    }
-}
-
-# Find the path of powershell-core.
-# If there are more versions, start the first one.
-Function find-pwsh {
-    $pwsh = Resolve-Path "\Program Files\Powershell\*\Pwsh.exe"
-    "$pwsh"
-    if (Test-Path $pwsh.path){
-        & $pwsh[0].path
-    }
-    else {
-        Write-Host "No such file, $pwsh" -ForegroundColor Yellow
-    }
-}
-
 # Find conflicts in Dropbox
 Function find-dropbox-conflicts {
     Get-ChildItem -r -Path ~/Dropbox -Name *konflikt*
@@ -532,64 +473,6 @@ Function find-dropbox-conflicts {
 # Find conflicts in Onedrive
 Function find-onedrive-conflicts {
     Get-ChildItem -r -Path ~/OneDrive -Name *konflikt*
-}
-
-# Search bing for powershell examples
-# Bing has preview of powershell code which is nice
-Function Search-PowershellBing {
-    $search = "powershell+"
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://www.bing.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://www.bing.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search google for stuff
-Function Search-Google {
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://www.google.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://www.google.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search StackExchange for Emacs stuff
-Function Search-EmacsSX {
-    $search += $args -join "+"
-
-    if($search){
-        $uri ="https://emacs.stackexchange.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://emacs.stackexchange.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search StackOverFlow for Powershell stuff
-Function Search-PowershellSX {
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://stackoverflow.com/search?q=%5Bpowershell%5D+" + "$search"
-    }
-    else {
-        $uri = "https://stackoverflow.com/search?q=%5Bpowershell%5D+"
-    }
-
-    Start-Process $uri
 }
 
 # Start hugo locally and fire up a webpage
@@ -688,126 +571,6 @@ function fix-outlook-hyperlink-error {
     }
     else {
         Write-Output "You dont have administrative rights to change this!"
-    }
-}
-
-# Get som Powershell books for reference, put them in ~\Documents.
-Function Get-Books {
-    param(
-        $path =  "~\Documents\Books"
-    )
-
-    $path = Convert-Path $path
-
-    if (Test-Path $path) {
-        # Lee Holmes
-        git -C $path clone https://resources.oreilly.com/examples/0636920024132.git "PowerShell CookBook Examples"
-
-        # Douglas Finke
-        git -C $path clone https://github.com/dfinke/powershell-for-developers.git "PowerShell for Developers"
-
-        # Adam Bertram
-        git -C $path clone https://github.com/adbertram/Automate-The-Boring-Stuff-With-PowerShell.git "Automate the Boring Stuff with Powershell"
-    }
-    else {
-        Write-Output "No such path: $path"
-    }
-}
-
-# Enables WSL
-Function Enable-WSL {
-    Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
-}
-
-Function Enable-HyperV {
-    Enable-WindowsOptionalFeature -Online -FeatureName containers -All -NoRestart
-    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
-}
-
-# Install WSL
-# From https://blogs.msdn.microsoft.com/commandline/2018/11/05/whats-new-for-wsl-in-the-windows-10-october-2018-update/
-# For other distros, https://docs.microsoft.com/en-us/windows/wsl/install-manual
-# Adds the username '$user' with the password 'password'. Change this after you login.
-Function Install-WSL {
-    [cmdletbinding()]
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$Path,
-        [Parameter(Mandatory=$true)]
-        [string]$User
-    )
-
-    # Download the file without displaying progress
-    $ProgressPreference = "SilentlyContinue"
-    Write-Verbose "Downloading..."
-    Invoke-WebRequest -Uri "https://aka.ms/wsl-ubuntu-1804" -OutFile $Path -UseBasicParsing
-    $ProgressPreference = "Continue"
-
-    Write-Verbose "Installing package $Path"
-    Add-AppxPackage -Path $Path
-    RefreshEnv
-
-    Write-Verbose "Configuring WSL for $User"
-    Ubuntu1804 install --root
-    Ubuntu1804 run "apt update"
-    Ubuntu1804 run "apt upgrade -y"
-    Ubuntu1804 run "apt install -y git make"
-    Ubuntu1804 run "printf '[automount]\nroot = /\noptions = \U022metadata\U022\n' > /etc/wsl.conf"
-    Ubuntu1804 run "groupadd -g 1000 $User"
-    Ubuntu1804 run "useradd -u 1000 -g 1000 -G sudo -d /home/$User -m -s /bin/bash $User"
-    Ubuntu1804 run "usermod -p '`$6`$OiB0Vesp`$W2pekhjHU.BMIKdnGnzBPy93pqA5j9UHFQ2uT94i4ukixVkCN/xomc9mWtkBCKCkFndGKDkVdzVR45EpUkcV51' $User"
-    Ubuntu1804 config --default-user $User
-    Remove-Item -Force -Path $Path
-}
-
-# Get Windows Colortool
-Function Install-ColorTool {
-    [cmdletbinding()]
-
-    param()
-
-    $tmp =  "~\Downloads\ColorTool.zip"
-    $terminal = Invoke-Restmethod "https://api.github.com/repos/Microsoft/Terminal/releases/latest"
-    $release = $terminal.tag_name
-    $uri = "https://github.com/microsoft/Terminal/releases/download/$release/ColorTool.zip"
-
-    $dest = Convert-Path "~/bin"
-    $start_time = Get-Date
-
-    Write-Verbose "Downloading $uri"
-    Invoke-WebRequest -Uri $uri -OutFile $tmp -UseBasicParsing
-
-    Expand-Archive $tmp $dest -Force
-    Write-Verbose "Extracted $tmp to $dest"
-
-    $time = $((Get-Date).subtract($start_time).seconds)
-    Write-Output "Downloaded Colorest.exe to $dest\ColorTool.exe in $time seconds"
-}
-
-# Install powershell core
-# From: https://www.thomasmaurer.ch/2019/03/how-to-install-and-update-powershell-6/
-Function Install-PowershellCore {
-    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI"
-}
-
-# Step buildnumber and store as UTF8
-Function My-Step {
-    #Requires -Modules Buildhelpers
-    param(
-        [Parameter(Mandatory=$True)]
-        $ModuleFile,
-        [ValidateSet("Build", "Major","Minor","Patch")]
-        [string]$Step = "Patch"
-    )
-    Import-module Buildhelpers
-
-    if (Test-Path $ModuleFile){
-        Step-ModuleVersion -Path $modulefile -By $Step
-        $content = Get-Content $modulefile
-        Set-Content -Path $modulefile -Value $content -Encoding UTF8
-    }
-    else {
-        Write-Host "No such file $ModuleFile"
     }
 }
 
@@ -933,36 +696,4 @@ Function Ignore-SelfSignedCerts {
     }
 
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-}
-function Send-ToTeams {
-    [cmdletbinding()]
-    param (
-        [Parameter(Mandatory=$true)]
-        [string]$WebHook,
-        [Parameter(Mandatory=$true)]
-        [string]$Text
-    )
-
-    $payload = @{
-        "text" = $Text
-    }
-    $json = ConvertTo-Json $payload
-    Invoke-RestMethod -Method Post -ContentType "application/json;charset=UTF-8" -Body $json -Uri $WebHook
-}
-# Remove old versions of scoop packages
-Function Remove-ScoopExtraVersion {
-
-    Write-Host "Removing extra *User* app versions."
-    $Apps = Get-ChildItem ~/scoop/apps
-    foreach($app in $Apps){
-        scoop cleanup $app.name
-    }
-
-    if (Test-Admin) {
-        Write-Host "Removing extra *Global* app versions."
-        $Apps = Get-ChildItem /ProgramData/scoop/apps
-        foreach($app in $Apps){
-            scoop cleanup -g $app.name
-        }
-    }
 }
