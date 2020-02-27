@@ -574,27 +574,6 @@ function fix-outlook-hyperlink-error {
     }
 }
 
-# Step buildnumber and store as UTF8
-Function My-Step {
-    #Requires -Modules Buildhelpers
-    param(
-        [Parameter(Mandatory=$True)]
-        $ModuleFile,
-        [ValidateSet("Build", "Major","Minor","Patch")]
-        [string]$Step = "Patch"
-    )
-    Import-module Buildhelpers
-
-    if (Test-Path $ModuleFile){
-        Step-ModuleVersion -Path $modulefile -By $Step
-        $content = Get-Content $modulefile
-        Set-Content -Path $modulefile -Value $content -Encoding UTF8
-    }
-    else {
-        Write-Host "No such file $ModuleFile"
-    }
-}
-
 # Starts VS Code with a profile. It creates a new profile if -Config don't exists
 Function Start-VSCode {
     [cmdletbinding()]
