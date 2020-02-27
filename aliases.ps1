@@ -534,64 +534,6 @@ Function find-onedrive-conflicts {
     Get-ChildItem -r -Path ~/OneDrive -Name *konflikt*
 }
 
-# Search bing for powershell examples
-# Bing has preview of powershell code which is nice
-Function Search-PowershellBing {
-    $search = "powershell+"
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://www.bing.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://www.bing.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search google for stuff
-Function Search-Google {
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://www.google.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://www.google.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search StackExchange for Emacs stuff
-Function Search-EmacsSX {
-    $search += $args -join "+"
-
-    if($search){
-        $uri ="https://emacs.stackexchange.com/search?q=" + "$search"
-    }
-    else {
-        $uri = "https://emacs.stackexchange.com/search"
-    }
-
-    Start-Process $uri
-}
-
-# Search StackOverFlow for Powershell stuff
-Function Search-PowershellSX {
-    $search += $args -join "+"
-
-    if($search){
-        $uri = "https://stackoverflow.com/search?q=%5Bpowershell%5D+" + "$search"
-    }
-    else {
-        $uri = "https://stackoverflow.com/search?q=%5Bpowershell%5D+"
-    }
-
-    Start-Process $uri
-}
-
 # Start hugo locally and fire up a webpage
 Function test-hugo {
     Start-Job -ScriptBlock {& hugo server -D --disableFastRender}
