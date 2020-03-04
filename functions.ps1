@@ -116,3 +116,42 @@ Function Start-Portainer {
     Start-Process Resolve-Path ~\go\bin\tcpproxy.exe -WindowStyle Hidden
     docker run -p 9000:9000 -v portainer_data:/data portainer/portainer -H tcp://10.0.75.1:2375
 }
+# Create a new local modulepath and add it to PSModulePath
+Function Set-LocalModulePath {
+
+    [cmdletbinding()]
+    param()
+
+    # Current Documents folder
+    $Documents = [System.Environment]::GetFolderPath("MyDocuments")
+    Write-Verbose "Documents-path: $Documents"
+
+    # Check wich version of Powershell
+    switch ($PSVersionTable.PSEdition){
+        "Core" {$version = "PowerShell/Modules"}
+        "Desktop" { $version = "WindowsPowerShell/Modules"}
+    }
+
+    # Resolve the path to modules depending on version of Powershell
+    $LocalDirectory = [System.IO.Path]::GetFullPath((Join-Path -Path (Resolve-Path "~") -ChildPath ".local"))
+    $NewModuleDirectory = Join-Path -Path $LocalDirectory -ChildPath $version
+    Write-Verbose "New module-path: $NewModuleDirectory"
+
+    try {
+        Test-Path $NewModuleDirectory -ErrorAction Stop-Process
+    }
+    catch {
+        New-Item -Path $NewModuleDirectory -ItemType Directory -Force|Out-Null
+    }
+
+    $CurModuleDirectory = Join-Path -Path $Documents -ChildPath $version
+    Write-Verbose "Current module directory: $CurModuleDirectory"
+
+    $OldPath = $env:PSModulePath -split(";")
+    [string[]]$NewPath = $NewModuleDirectory
+    $NewPath += $OldPath
+    #$Newpath = $env:PSModulePath -replace ([RegEx]::Escape($CurModuleDirectory)), $NewModuleDirectory
+    Write-Verbose "Old module path: $env:PSModulePath"
+    Write-Verbose "New module path: $NewPath"
+    $NewPath -join(";")
+}

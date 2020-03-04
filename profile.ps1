@@ -42,3 +42,5 @@ else {
 }
 . $DirScripts\aliases.ps1
 . $DirScripts\functions.ps1
+
+$env:PSModulePath = Set-LocalModulePath
