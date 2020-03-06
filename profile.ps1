@@ -46,7 +46,7 @@ else {
 . $DirScripts\functions.ps1
 
 # Add local module-path to `$PSModulePath
-$env:PSModulePath = Set-LocalModulePath -Verbose
+$env:PSModulePath = Set-LocalModulePath
 
 # Import aliases
 . $DirScripts\aliases.ps1
