@@ -116,42 +116,52 @@ Function Start-Portainer {
     Start-Process Resolve-Path ~\go\bin\tcpproxy.exe -WindowStyle Hidden
     docker run -p 9000:9000 -v portainer_data:/data portainer/portainer -H tcp://10.0.75.1:2375
 }
+
 # Create a new local modulepath and add it to PSModulePath
 Function Set-LocalModulePath {
 
     [cmdletbinding()]
     param()
 
-    # Current Documents folder
-    $Documents = [System.Environment]::GetFolderPath("MyDocuments")
-    Write-Verbose "Documents-path: $Documents"
-
-    # Check wich version of Powershell
-    switch ($PSVersionTable.PSEdition){
-        "Core" {$version = "PowerShell/Modules"}
-        "Desktop" { $version = "WindowsPowerShell/Modules"}
+    begin {
+        # Current Documents folder
+        $Documents = [System.Environment]::GetFolderPath("MyDocuments")
+        Write-Verbose "Documents-path: $Documents"
     }
 
-    # Resolve the path to modules depending on version of Powershell
-    $LocalDirectory = [System.IO.Path]::GetFullPath((Join-Path -Path (Resolve-Path "~") -ChildPath ".local"))
-    $NewModuleDirectory = Join-Path -Path $LocalDirectory -ChildPath $version
-    Write-Verbose "New module-path: $NewModuleDirectory"
+    process {
+        if ($isLinux){
+            # Dont do anything at the moment
+            Write-Verbose "$env:PSModulePath"
+        }
+        else {
 
-    try {
-        Test-Path $NewModuleDirectory -ErrorAction Stop-Process
+            # Check wich version of Powershell
+            switch ($PSVersionTable.PSEdition){
+                "Core" {$version = "PowerShell/Modules"}
+                "Desktop" { $version = "WindowsPowerShell/Modules"}
+            }
+
+            # Resolve the path to modules depending on version of Powershell
+            $LocalDirectory = [System.IO.Path]::GetFullPath((Join-Path -Path $env:USERPROFILE -ChildPath ".local"))
+            $NewModuleDirectory = Join-Path -Path $LocalDirectory -ChildPath $version
+            Write-Verbose "New module directory: $NewModuleDirectory"
+
+            try {
+                Test-Path $NewModuleDirectory -ErrorAction Stop-Process
+            }
+            catch {
+                New-Item -Path $NewModuleDirectory -ItemType Directory -Force|Out-Null
+            }
+
+            $OldModulePath = $env:PSModulePath -split(";")
+            [string[]]$NewModulePath = $NewModuleDirectory
+            $NewModulePath += $OldModulePath
+        }
     }
-    catch {
-        New-Item -Path $NewModuleDirectory -ItemType Directory -Force|Out-Null
+    end {
+        $NewModulePath -join(";")
+        Write-Verbose "Old module path: $env:PSModulePath"
+        Write-Verbose "New module path: $NewModulePath"
     }
-
-    $CurModuleDirectory = Join-Path -Path $Documents -ChildPath $version
-    Write-Verbose "Current module directory: $CurModuleDirectory"
-
-    $OldPath = $env:PSModulePath -split(";")
-    [string[]]$NewPath = $NewModuleDirectory
-    $NewPath += $OldPath
-    #$Newpath = $env:PSModulePath -replace ([RegEx]::Escape($CurModuleDirectory)), $NewModuleDirectory
-    Write-Verbose "Old module path: $env:PSModulePath"
-    Write-Verbose "New module path: $NewPath"
-    $NewPath -join(";")
 }
