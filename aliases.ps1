@@ -7,7 +7,12 @@
 Import-Module Get-ChildItemColor
 
 # Add the path to my powershell-scripts
-$env:Path += ";$env:UserProfile\Repos\powershell-stuff"
+if ($isLinux){
+    $env:PATH += ":$env:HOME\repos\powershell-stuff"
+}
+else {
+    $env:Path += ";$env:UserProfile\repos\powershell-stuff"
+}
 
 # Remove built in aliases
 Remove-Item alias:curl 2>$null
