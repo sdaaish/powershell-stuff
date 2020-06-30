@@ -59,6 +59,9 @@ Set-Alias -Name cfd -Value 'ConvertFrom-Docker'
 
 Set-Alias -Name ci -Value code-insiders
 
+# Ubuntu multipass virtual servers
+Set-Alias -Name mps -Value multipass
+
 #Functions
 function .. {
     cd ..
