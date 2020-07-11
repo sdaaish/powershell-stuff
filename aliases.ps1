@@ -376,6 +376,14 @@ function Get-proxy {
     }
 
 }
+
+# Get all my github repos
+Function Get-MyRepos {
+    $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
+    Set-Location ${Convert-Path ~/repos}
+    $MyRepos | ForEach-Object {git clone $_.git_url}
+}
+
 # Display current dns-servers for active interfaces
 Function Get-dns-servers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
