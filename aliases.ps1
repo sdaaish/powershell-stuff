@@ -713,3 +713,7 @@ Function Ignore-SelfSignedCerts {
 
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 }
+
+Function Kill-F5VpnProcess {
+    Get-Process| Where-Object ProcessName -Match f5| Stop-Process -Force
+}
