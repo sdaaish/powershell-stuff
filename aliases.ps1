@@ -62,6 +62,9 @@ Set-Alias -Name ci -Value code-insiders
 # Ubuntu multipass virtual servers
 Set-Alias -Name mps -Value multipass
 
+# Defender
+Set-Alias -Name mdatp -Value  'C:\Program Files\Windows Defender\MpCmdRun.exe'
+
 #Functions
 function .. {
     cd ..
