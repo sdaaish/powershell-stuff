@@ -7,7 +7,12 @@
 Import-Module Get-ChildItemColor
 
 # Add the path to my powershell-scripts
-$env:Path += ";$env:UserProfile\Repos\powershell-stuff"
+if ($isLinux){
+    $env:PATH += ":$env:HOME\repos\powershell-stuff"
+}
+else {
+    $env:Path += ";$env:UserProfile\repos\powershell-stuff"
+}
 
 # Remove built in aliases
 Remove-Item alias:curl 2>$null
@@ -53,6 +58,12 @@ Set-Alias -Name dco -Value 'docker-compose'
 Set-Alias -Name cfd -Value 'ConvertFrom-Docker'
 
 Set-Alias -Name ci -Value code-insiders
+
+# Ubuntu multipass virtual servers
+Set-Alias -Name mps -Value multipass
+
+# Defender
+Set-Alias -Name mdatp -Value  'C:\Program Files\Windows Defender\MpCmdRun.exe'
 
 #Functions
 function .. {
@@ -368,6 +379,14 @@ function Get-proxy {
     }
 
 }
+
+# Get all my github repos
+Function Get-MyRepos {
+    $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
+    Set-Location ${Convert-Path ~/repos}
+    $MyRepos | ForEach-Object {git clone $_.git_url}
+}
+
 # Display current dns-servers for active interfaces
 Function Get-dns-servers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
@@ -696,4 +715,8 @@ Function Ignore-SelfSignedCerts {
     }
 
     [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+}
+
+Function Kill-F5VpnProcess {
+    Get-Process| Where-Object ProcessName -Match f5| Stop-Process -Force
 }

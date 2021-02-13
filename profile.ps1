@@ -40,5 +40,13 @@ else {
     $name = $Env:USER
     $Host.UI.RawUI.WindowTitle = "Powershell " + $name
 }
-. $DirScripts\aliases.ps1
+
+
+# Import functions
 . $DirScripts\functions.ps1
+
+# Add local module-path to `$PSModulePath
+$env:PSModulePath = Set-LocalModulePath
+
+# Import aliases
+. $DirScripts\aliases.ps1
