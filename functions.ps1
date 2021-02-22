@@ -165,3 +165,17 @@ Function Set-LocalModulePath {
         Write-Verbose "New module path: $NewModulePath"
     }
 }
+# Start vcxsrv in Windows (XLaunch)
+Function startx {
+    if ($PSVersionTable.PSEdition = "Desktop" -or $isWindows ){
+        try {
+            xlaunch.exe -run $(Resolve-Path "~/OneDrive/.config/config.xlaunch")
+        }
+        catch {
+            Write-Error "Starting xlaunch failed."
+        }
+    }
+    else {
+        startx
+    }
+}
