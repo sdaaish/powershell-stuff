@@ -92,28 +92,44 @@ function cdv {
 }
 function ls {
     if (Get-Module Get-ChildItemColor) {
-        Get-ChildItemColorFormatWide "$args"
+        Get-ChildItemColorFormatWide $args
     }
     else {
-        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+        Get-ChildItem $args -Attributes H,!H,A,!A,S,!S
     }
 }
 function ll {
+    [cmdletbinding()]
+    Param (
+    )
+
     if (Get-Module Get-ChildItemColor) {
-        Get-ChildItemColor "$args"
+        Get-ChildItemColor $args
     }
     else {
-        Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S
+        Get-ChildItem $args -Attributes H,!H,A,!A,S,!S
     }
 }
+
 function lla {
-    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
+    [cmdletbinding()]
+    Param (
+    )
+    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
 }
+
 function lls {
-    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S|Sort-Object Length
+    [cmdletbinding()]
+    Param (
+    )
+    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
+
 function llt {
-    Get-ChildItem "$args" -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
+    [cmdletbinding()]
+    Param (
+    )
+    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
 }
 function now {
     Get-Date -Format yyyyMMdd-HH:mm:ss
@@ -143,7 +159,7 @@ Function New-List {
 
 # Equivalent of linux wc, word counts
 Function wc {
-    Get-Content "$args"| Measure-Object -Character -Line -Word| select lines,words,characters
+    Get-Content $args| Measure-Object -Character -Line -Word| select lines,words,characters
 }
 
 # Search an alias or display all of them
@@ -185,7 +201,7 @@ function emacs-client() {
     }
     else {
         # Dont create a new frame if files exists as argument
-        emacsclientw --quiet --alternate-editor="" "$args"
+        emacsclientw --quiet --alternate-editor="" $args
     }
 }
 # Show dns search suffix
