@@ -17,9 +17,9 @@ $Host.UI.RawUI.BufferSize.height=5000
 # This works with 1.0 of Posh-Git
 Import-Module Posh-Git
 
-# Oh-my-PosH https://github.com/JanDeDobbeleer/oh-my-posh
+# Oh-my-PoSH https://ohmyposh.dev/docs/upgrading/
 Import-Module oh-my-posh
-Set-Theme Paradox
+Set-PoshPrompt -Theme Paradox
 
 # $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
 # $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
