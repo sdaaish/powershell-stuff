@@ -422,7 +422,7 @@ Function dotgit {
 }
 
 # Display current dns-servers for active interfaces
-Function Get-dns-servers {
+Function Get-DNSServers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach ($if in $interfaces){
         $dnsserver = (Get-DNSClientServerAddress -InterfaceIndex $if.ifIndex)
