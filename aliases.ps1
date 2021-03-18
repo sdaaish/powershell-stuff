@@ -403,6 +403,24 @@ Function Get-MyRepos {
     $MyRepos | ForEach-Object {git clone $_.git_url}
 }
 
+# My local files in a bare git repo
+Function dotgit {
+    if  ($isLinux){
+    }
+    else {
+        $gitdir = Join-Path ${env:USERPROFILE} ".dotgit"
+        $workdir = ${env:USERPROFILE}
+        $cmd = Get-Command git.exe
+
+        $options = @(
+            "--git-dir=${gitdir}"
+            "--work-tree=${workdir}"
+        )
+        Write-Verbose "$cmd @options $argsa"
+        & $cmd @options $args
+    }
+}
+
 # Display current dns-servers for active interfaces
 Function Get-dns-servers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
