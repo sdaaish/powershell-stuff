@@ -421,6 +421,59 @@ Function dotgit {
     }
 }
 
+# My local files in a bare git repo
+Function clone-dotgit {
+    [cmdletbinding(
+         SupportsShouldProcess,
+         ConfirmImpact = 'High'
+     )]
+    Param (
+        [Switch]$Force
+    )
+
+    if  ($isLinux){
+    }
+    else {
+        if ($Force){
+            $ConfirmPreference = 'None'
+        }
+
+        $gitdir = Join-Path ${env:USERPROFILE} ".dotgit"
+        $workdir = ${env:USERPROFILE}
+        $tmpdir = Join-Path ${env:USERPROFILE} "tmpdir"
+        $gitrepo = "https://github.com/sdaaish/windotfiles.git"
+        $cmd = Get-Command git.exe
+
+        New-Item -Path $tmpdir -ItemType Directory -Force|Out-Null
+
+        # Options to clone github to tmp-dir with separate git-repo
+        $options = @(
+            "clone"
+            "--separate-git-dir=${gitdir}"
+            "$gitrepo"
+            "${tmpdir}"
+        )
+        Write-Verbose "$cmd @options"
+        & $cmd @options
+
+        # Add default settings
+        dotgit config status.showUntrackedFiles no
+
+        # Copy files recursivly
+        if ($Force -or $PSCmdlet.ShouldProcess($gitdir,'Overwrite  files')){
+            Copy-Item -Path $tmpdir/* -Destination $workdir -Recurse -Force
+        }
+        else {
+            Copy-Item -Path $tmpdir/* -Destination $workdir -Recurse
+        }
+
+        # Delete tmp
+        if ($Force -or $PSCmdlet.ShouldProcess($tmpdir,'Remove files')){
+            Remove-Item -Path $tmpdir -Recurse
+        }
+    }
+}
+
 # Display current dns-servers for active interfaces
 Function Get-DNSServers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
