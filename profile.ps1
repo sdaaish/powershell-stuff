@@ -21,12 +21,12 @@ Call this script from profile in windows directory
 #Set-Location ($env:UserProfile)
 
 # Settings for PSReadLine
-$PSReadLineOptions = @(
-    EditMode = Emacs
-    BellStyle = None
-    PredictionSource = History
-)
-Set-PSReadlineOption $PSReadLineOptions
+$PSReadLineOptions = @{
+    EditMode = "Emacs"
+    BellStyle = "None"
+    PredictionSource = "History"
+}
+Set-PSReadlineOption @PSReadLineOptions
 
 # Get info about current user
 if ( $PSVersionTable.Platform -notlike "Unix"){
