@@ -20,8 +20,13 @@ Call this script from profile in windows directory
 # Standard home dir
 #Set-Location ($env:UserProfile)
 
-# No bell sound
-Set-PSReadlineOption -BellStyle None
+# Settings for PSReadLine
+$PSReadLineOptions = @(
+    EditMode = Emacs
+    BellStyle = None
+    PredictionSource = History
+)
+Set-PSReadlineOption $PSReadLineOptions
 
 # Get info about current user
 if ( $PSVersionTable.Platform -notlike "Unix"){
