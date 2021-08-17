@@ -194,14 +194,17 @@ Function emdi {
 }
 
 function emacs-client() {
+    $date =  Get-Date -Format 'yyyyMMdd-HH.mm.ss'
+    $logfile = Join-Path $(Resolve-path ~/tmp) "emacs-client-${date}.log"
+
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
         # Create a new frame if no files as argument
-        emacsclientw --quiet --alternate-editor="" --create-frame
+        emacsclientw --quiet --alternate-editor="runemacs.exe" --create-frame *> $logfile
     }
     else {
         # Dont create a new frame if files exists as argument
-        emacsclientw --quiet --alternate-editor="" $args
+        emacsclientw --quiet --alternate-editor="runemacs.exe" $args *> $logfile
     }
 }
 # Show dns search suffix
@@ -475,6 +478,7 @@ Function clone-dotgit {
 }
 
 # Display current dns-servers for active interfaces
+# Get-NetIPConfiguration| select InterfaceAlias,IPv4Address,serveraddresses -ExpandProperty dnsserver -ea ign
 Function Get-DNSServers {
     $interfaces = (Get-NetAdapter| select Name,ifIndex,Status| where Status -eq Up)
     foreach ($if in $interfaces){
