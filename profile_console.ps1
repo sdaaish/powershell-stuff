@@ -19,7 +19,8 @@ Import-Module Posh-Git
 
 # Oh-my-PoSH https://ohmyposh.dev/docs/upgrading/
 Import-Module oh-my-posh
-Set-PoshPrompt -Theme Paradox
+try {Set-PoshPrompt -Theme ${env:USERPROFILE}\.config\oh-my-posh\my-posh-theme.omp.json}
+catch {Set-PoshPrompt -Theme Paradox}
 
 # $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
 # $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
