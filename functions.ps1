@@ -135,7 +135,10 @@ Function Set-LocalModulePath {
 Function startx {
     if ($PSVersionTable.PSEdition = "Desktop" -or $isWindows ){
         try {
-            xlaunch.exe -run $(Resolve-Path "~/OneDrive/.config/config.xlaunch")
+            # Multiply window scaling with 96 to get DPI. 150 -> 144, 125 -> 120 and so on.
+            # Export GDK_DPI_SCALING=1.50 in wsl to reflect the above.
+            # From https://medium.comto/@promiselchin/fixing-blurry-fonts-on-wsl-with-x-server-816b4a4f855f
+            xlaunch.exe -run $(Resolve-Path "~/OneDrive/.config/config.xlaunch") -dpi 144
         }
         catch {
             Write-Error "Starting xlaunch failed."
