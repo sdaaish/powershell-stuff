@@ -18,7 +18,7 @@ $common_profile = Convert-Path "$DirScripts/profile.ps1"
 
 $value = @"
 `$DirScripts = "$(Convert-Path $DirScripts)"
-. "$DirScripts/profile.ps1"'
+. `$(Join-Path `$DirScripts profile.ps1)
 "@
 
 # Create the common profile for both Console and ISE (same file)

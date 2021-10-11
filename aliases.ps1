@@ -32,8 +32,8 @@ Set-Alias -Name emacs -Value emacs-client
 Set-Alias -Name l -Value Get-Content
 Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
-Set-Alias -Name poff -Value my-shutdown
-Set-Alias -Name poffr -Value my-reboot
+Set-Alias -Name poff -Value Stop-Computer
+Set-Alias -Name poffr -Value Restart-Computer
 Set-Alias -Name ql -Value New-List
 Set-Alias -Name st -Value Start-Transcript
 Set-Alias -Name which -Value Get-Command
@@ -101,35 +101,39 @@ function ls {
 function ll {
     [cmdletbinding()]
     Param (
+        $Path
     )
 
     if (Get-Module Get-ChildItemColor) {
-        Get-ChildItemColor $args
+        Get-ChildItemColor $Path
     }
     else {
-        Get-ChildItem $args -Attributes H,!H,A,!A,S,!S
+        Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S
     }
 }
 
 function lla {
     [cmdletbinding()]
     Param (
+        $Path
     )
-    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
+    Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S,C,!C,E,!E
 }
 
 function lls {
     [cmdletbinding()]
     Param (
+        $Path
     )
-    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S|Sort-Object Length
+    Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S|Sort-Object Length
 }
 
 function llt {
     [cmdletbinding()]
     Param (
+        $Path
     )
-    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
+    Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S| Sort-Object lastwritetime
 }
 function now {
     Get-Date -Format yyyyMMdd-HH:mm:ss
@@ -419,7 +423,7 @@ Function dotgit {
             "--git-dir=${gitdir}"
             "--work-tree=${workdir}"
         )
-        Write-Verbose "$cmd @options $argsa"
+        Write-Verbose "$cmd @options $args"
         & $cmd @options $args
     }
 }
@@ -553,17 +557,11 @@ Function top {
 
 # Show filehash for all executables running
 function Get-ProcessHash {
-    Get-Process|Get-Item -ErrorAction Ignore| Get-FileHash|Select-Object Path,Hash| Sort-Object -Property Path -Unique
-}
-
-# Shutdown the computer
-Function my-shutdown {
-    & shutdown.exe /s /t 1
-}
-
-# Restart the computer
-Function my-reboot {
-    & shutdown.exe /r /t 1
+    Get-Process|
+      Where-Object {$_.Path}|
+      Sort-Object -Property Path -Unique|
+      Foreach-Object {Get-FileHash $_.Path}|
+      Select-Object Hash,Path
 }
 
 # Show services
@@ -572,8 +570,14 @@ Function my-service {
 }
 
 # Find links in the filesystem
-function Find-Links([string]$path=".") {
-    Get-ChildItem $path -ErrorAction SilentlyContinue| ?{$_.Linktype}| Select-Object FullName, Target,LastWriteTime,LinkType
+function Find-Links {
+    [cmdletbinding()]
+    Param (
+        $Path
+    )
+    Get-ChildItem $Path -ErrorAction SilentlyContinue|
+      Where-Object {$_.Linktype}|
+      Select-Object FullName, Target,LastWriteTime,LinkType
 }
 
 # Find conflicts in Dropbox
