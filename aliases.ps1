@@ -4,8 +4,6 @@
 #New-Item alias:x -Value "exit"
 #Set-Location ~
 
-Import-Module Get-ChildItemColor
-
 # Add the path to my powershell-scripts
 if ($isLinux){
     $env:PATH += ":$env:HOME\repos\powershell-stuff"
@@ -91,12 +89,7 @@ function cdv {
     Set-Location ~\Vagrantdir
 }
 function ls {
-    if (Get-Module Get-ChildItemColor) {
-        Get-ChildItemColorFormatWide $args
-    }
-    else {
-        Get-ChildItem $args -Attributes H,!H,A,!A,S,!S
-    }
+    Get-ChildItem $args -Attributes H,!H,A,!A,S,!S
 }
 function ll {
     [cmdletbinding()]
@@ -104,12 +97,7 @@ function ll {
         $Path
     )
 
-    if (Get-Module Get-ChildItemColor) {
-        Get-ChildItemColor $Path
-    }
-    else {
         Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S
-    }
 }
 
 function lla {

@@ -17,12 +17,9 @@ $Host.UI.RawUI.BufferSize.height=5000
 $Theme = Join-Path ${env:USERPROFILE} ".config\oh-my-posh\my-posh-theme.omp.json"
 oh-my-posh.exe --init --shell pwsh --config $Theme | Invoke-Expression
 
-# $GitPromptSettings.DefaultPromptAbbreviateHomeDirectory = $true
-# $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
-# $GitPromptSettings.DefaultPromptPrefix = "`n"
-# $GitPromptSettings.DefaultPromptBeforeSuffix.Text = '`n$([DateTime]::now.ToString("MM-dd HH:mm:ss"))'
-# $GitPromptSettings.DefaultPromptBeforeSuffix.ForegroundColor = 0xdaa520
-# $GitPromptSettings.DefaultPromptSuffix = ' $((Get-History -Count 1).id + 1)$(" >" * ($nestedPromptLevel + 1)) '
+$ColorTheme = Join-Path ${env:UserProfile} ".config\ColorThemes\MyColorTheme.psd1"
+Add-TerminalIconsColorTheme -Path $ColorTheme -Force
+Set-TerminalIconsTheme -ColorTheme MyColorTheme
 
 # Clear terminal
 #Clear-Host
