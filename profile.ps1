@@ -28,6 +28,9 @@ $PSReadLineOptions = @{
 }
 Set-PSReadlineOption @PSReadLineOptions
 
+# Add output of all commands to $__, set as default value
+$PSDefaultParameterValues["Out-Default:OutVariable"] = "__"
+
 # Get info about current user
 if ( $PSVersionTable.Platform -notlike "Unix"){
     $id = [System.Security.Principal.WindowsIdentity]::GetCurrent()
