@@ -21,12 +21,14 @@ Remove-Item alias:ls -Force 2>$null
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Search-Alias
+
 Set-Alias -Name crep -Value ~\repos\powershell-stuff\check-repos.ps1
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
+
 Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emx -Value emacs-client
-Set-Alias -Name emacs -Value emacs-client
+
 Set-Alias -Name l -Value Get-Content
 Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
@@ -188,15 +190,25 @@ Function emdi {
 function emacs-client() {
     $date =  Get-Date -Format 'yyyyMMdd-HH.mm.ss'
     $logfile = Join-Path $(Resolve-path ~/tmp) "emacs-client-${date}.log"
+    # Workaround for using chemacs2 with server in Windows10
+    $serverfile = $(Resolve-Path ~/.config/emacs.default/server/server).Path
+
+    $cmd = Get-Command emacsclientw.exe
+    $options = @(
+        "--quiet"
+        "--alternate-editor=runemacs.exe"
+        "--server-file=${serverfile}"
+        "--create-frame"
+    )
 
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
         # Create a new frame if no files as argument
-        emacsclientw --quiet --alternate-editor="runemacs.exe" --create-frame *> $logfile
+        & $cmd @options *> $logfile
     }
     else {
         # Dont create a new frame if files exists as argument
-        emacsclientw --quiet --alternate-editor="runemacs.exe" $args *> $logfile
+        & $cmd @options  $args *> $logfile
     }
 }
 # Show dns search suffix
