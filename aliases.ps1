@@ -130,10 +130,15 @@ function now {
 }
 Function disk-usage {
     param(
-        $Path
+        $Path = $(Resolve-Path .)
     )
-    Get-ChildItem -Path $Path -File -Recurse |
-      Measure-Object -Property Length -Sum
+    $dirs = Get-ChildItem -Path $Path -Recurse -ErrorAction Ignore
+    $result = [PSCustomObject]@{
+        "Directories" = ($dirs | Where-Object PSIsContainer -eq $true | Measure-Object).Count
+        "Files" = ($dirs | Where-Object PSIsContainer -eq $false | Measure-Object).Count
+        "Sum" = ($dirs | Measure-Object -Property Length -Sum).Sum
+    }
+    $result
 }
 
 # Alias for help-command
