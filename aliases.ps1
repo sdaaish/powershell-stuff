@@ -479,6 +479,9 @@ Function clone-dotgit {
             Copy-Item -Path $tmpdir/* -Destination $workdir -Recurse
         }
 
+        # Clone submodules
+        dotgit submodule update --init --force --remote
+
         # Delete tmp
         if ($Force -or $PSCmdlet.ShouldProcess($tmpdir,'Remove files')){
             Remove-Item -Path $tmpdir -Recurse
