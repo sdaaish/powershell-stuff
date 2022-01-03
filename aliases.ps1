@@ -21,12 +21,14 @@ Remove-Item alias:ls -Force 2>$null
 # Set own aliases
 Set-Alias -Name src -Value reload-powershell-profile
 Set-Alias -Name alias -Value Search-Alias
+
 Set-Alias -Name crep -Value ~\repos\powershell-stuff\check-repos.ps1
 Set-Alias -Name upr -Value ~\Repos\powershell-stuff\update-repos.ps1
 Set-Alias -Name ups -Value ~\Repos\powershell-stuff\update-status.ps1
+
 Set-Alias -Name em -Value emacs-client
 Set-Alias -Name emx -Value emacs-client
-Set-Alias -Name emacs -Value emacs-client
+
 Set-Alias -Name l -Value Get-Content
 Set-Alias -Name du -Value disk-usage
 Set-Alias -Name oc -Value org-commit
@@ -62,6 +64,9 @@ Set-Alias -Name mps -Value multipass
 
 # Defender
 Set-Alias -Name mdatp -Value  'C:\Program Files\Windows Defender\MpCmdRun.exe'
+
+# Firefox
+Set-Alias -Name ff -Value Start-Firefox
 
 #Functions
 function .. {
@@ -128,10 +133,15 @@ function now {
 }
 Function disk-usage {
     param(
-        $Path
+        $Path = $(Resolve-Path .)
     )
-    Get-ChildItem -Path $Path -File -Recurse |
-      Measure-Object -Property Length -Sum
+    $dirs = Get-ChildItem -Path $Path -Recurse -ErrorAction Ignore
+    $result = [PSCustomObject]@{
+        "Directories" = ($dirs | Where-Object PSIsContainer -eq $true | Measure-Object).Count
+        "Files" = ($dirs | Where-Object PSIsContainer -eq $false | Measure-Object).Count
+        "Sum" = ($dirs | Measure-Object -Property Length -Sum).Sum
+    }
+    $result
 }
 
 # Alias for help-command
@@ -188,15 +198,25 @@ Function emdi {
 function emacs-client() {
     $date =  Get-Date -Format 'yyyyMMdd-HH.mm.ss'
     $logfile = Join-Path $(Resolve-path ~/tmp) "emacs-client-${date}.log"
+    # Workaround for using chemacs2 with server in Windows10
+    $serverfile = $(Resolve-Path ~/.config/emacs.default/server/server).Path
+
+    $cmd = Get-Command emacsclientw.exe
+    $options = @(
+        "--quiet"
+        "--alternate-editor=runemacs.exe"
+        "--server-file=${serverfile}"
+        "--create-frame"
+    )
 
     # Starts emacsclient and daemon if not started
     if ($args.count -eq 0 ) {
         # Create a new frame if no files as argument
-        emacsclientw --quiet --alternate-editor="runemacs.exe" --create-frame *> $logfile
+        & $cmd @options *> $logfile
     }
     else {
         # Dont create a new frame if files exists as argument
-        emacsclientw --quiet --alternate-editor="runemacs.exe" $args *> $logfile
+        & $cmd @options  $args *> $logfile
     }
 }
 # Show dns search suffix
@@ -461,6 +481,9 @@ Function clone-dotgit {
         else {
             Copy-Item -Path $tmpdir/* -Destination $workdir -Recurse
         }
+
+        # Clone submodules
+        dotgit submodule update --init --force --remote
 
         # Delete tmp
         if ($Force -or $PSCmdlet.ShouldProcess($tmpdir,'Remove files')){
@@ -802,4 +825,32 @@ Function Ignore-SelfSignedCerts {
 
 Function Kill-F5VpnProcess {
     Get-Process| Where-Object ProcessName -Match f5| Stop-Process -Force
+}
+
+# Find the corretc Path for firefox
+Function Start-Firefox {
+    [cmdletbinding()]
+    Param (
+        [string]$InitProfile = "HOME",
+        [string]$Url
+    )
+
+    if (Test-Path 'C:\Program Files\Mozilla FireFox\firefox.exe') {
+        $firefox =  'C:\Program Files\Mozilla FireFox\firefox.exe'
+    }
+    elseif (Test-Path ${env:USERPROFILE}/scoop/apps/firefox/current/firefox.exe) {
+        $firefox = Resolve-Path ${env:USERPROFILE}/scoop/apps/firefox/current/firefox.exe
+    }
+    else {
+        $package = Get-AppxPackage Mozilla.MozillaFirefox
+        [xml]$AppManifest = Get-Content ([System.IO.Path]::Combine($package.InstallLocation,"AppxManifest.xml"))
+        $firefox = Join-Path $package.InstallLocation $AppManifest.Package.Applications.Application.Executable
+    }
+    $options = @(
+        "-P", $InitProfile
+        "-new-tab", $Url
+    )
+    Write-Verbose "InitProfile: ${InitProfile}, Url: ${Url}"
+    Write-Verbose "Firefox: ${firefox}"
+    & "$firefox" @options
 }
