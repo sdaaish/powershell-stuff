@@ -304,9 +304,15 @@ function api {
 }
 # Function to commit changes to org-files quickly
 function org-commit {
+    $gitdir = (Convert-Path ${env:USERPROFILE}\.orgit).replace("\","/")
+    $workdir = Convert-Path ${env:USERPROFILE}\OneDrive\emacs
+    $gitfile = Join-Path $workdir .git
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
+
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
-    Push-Location (Resolve-Path ~/OneDrive/emacs).Path
+    Set-Content -Path $gitfile -Value "gitdir: $gitdir" -Force
+
+    Push-Location $workdir
     orgit add org/*.org
     orgit add org/archive/*.org
     orgit add bookmarks
