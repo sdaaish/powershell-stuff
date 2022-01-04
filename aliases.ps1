@@ -306,48 +306,46 @@ function api {
 function org-commit {
     $date = (Get-Date -Format yyyyMMdd-HH:mm:ss)
     Write-Host -ForeGroundColor green "Commiting changes to org-files to local repo."
-    Push-Location ~/OneDrive/emacs
-    $files = @()
-    $files += Resolve-Path org/*.org
-    $files += Resolve-Path org/archive/*
-    $files += Resolve-Path bookmarks
-    git add $files
-    git commit -m "Comitting changes $date"
-    git push -q --all
+    Push-Location (Resolve-Path ~/OneDrive/emacs).Path
+    orgit add org/*.org
+    orgit add org/archive/*.org
+    orgit add bookmarks
+    orgit commit -m "Comitting changes $date"
+    orgit push -q --all
     Pop-Location
 }
 
-# Check for admin
-function Test-Admin
-{
-    $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
-    $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-    $prp.IsInRole($adm)
-}
-
-# Alias for git status
-Function Get-MyGitStatus {
-    git status -sb
-}
-# Alias for git log
-Function Get-MyGitLog {
-    param(
-        $path = ".",
-        $count = 40
-    )
-    $path = Convert-Path $path
-    if ( Test-Path $path -Type Leaf){
-        $path=Split-Path $path -Parent
+    # Check for admin
+    function Test-Admin
+    {
+        $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+        $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
+        $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+        $prp.IsInRole($adm)
     }
-    git -C $path log --oneline --all --graph --decorate --max-count=$count
-}
 
-# Create a .gitattributes-file if it doesnt exist
-function Add-GitAttributesFile {
+    # Alias for git status
+    Function Get-MyGitStatus {
+        git status -sb
+    }
+    # Alias for git log
+    Function Get-MyGitLog {
+        param(
+            $path = ".",
+            $count = 40
+        )
+        $path = Convert-Path $path
+        if ( Test-Path $path -Type Leaf){
+            $path=Split-Path $path -Parent
+        }
+        git -C $path log --oneline --all --graph --decorate --max-count=$count
+    }
 
-    # Text to add in the file
-    $text = @"
+    # Create a .gitattributes-file if it doesnt exist
+    function Add-GitAttributesFile {
+
+        # Text to add in the file
+        $text = @"
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
 
@@ -367,59 +365,59 @@ function Add-GitAttributesFile {
 *.jpg binary
 "@
 
-    if (Test-Path -Path .git -PathType Container) {
-        if (-not (Test-Path -Path .gitattributes -PathType Leaf)){
-            Set-Content -Path .gitattributes -Value $text
-            Write-Output "Added a new .gitattributesfile"
+        if (Test-Path -Path .git -PathType Container) {
+            if (-not (Test-Path -Path .gitattributes -PathType Leaf)){
+                Set-Content -Path .gitattributes -Value $text
+                Write-Output "Added a new .gitattributesfile"
+            }
+            else {
+                Write-Output "A .gitattributesfile already exists."
+            }
         }
         else {
-            Write-Output "A .gitattributesfile already exists."
+            Write-Output "Not a repository."
         }
     }
-    else {
-        Write-Output "Not a repository."
-    }
-}
 
-# Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
-function fix-tty {
-    $console.ForegroundColor = "white"
-    $console.BackgroundColor = "black"
-    Clear-Host
-}
-function keybase {
-    $prg = $env:LocalAppData + "\Keybase\keybase.exe"
-    & $prg $args
-}
-# Checks for proxy settings
-function Get-proxy {
-    $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
-    $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
-    $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
-
-    if ( $proxyenabled -eq 0) {
-        Write-Host "No proxy enabled"
+    # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
+    function fix-tty {
+        $console.ForegroundColor = "white"
+        $console.BackgroundColor = "black"
+        Clear-Host
     }
-    else {
-        Write-Host "Proxy enabled"
+    function keybase {
+        $prg = $env:LocalAppData + "\Keybase\keybase.exe"
+        & $prg $args
     }
+    # Checks for proxy settings
+    function Get-proxy {
+        $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+        $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
+        $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
 
-    foreach ($setting in $proxysettings) {
-        $value = (Get-ItemProperty -path $regKey).$setting
-        "$setting is:`t$value"
+        if ( $proxyenabled -eq 0) {
+            Write-Host "No proxy enabled"
+        }
+        else {
+            Write-Host "Proxy enabled"
+        }
+
+        foreach ($setting in $proxysettings) {
+            $value = (Get-ItemProperty -path $regKey).$setting
+            "$setting is:`t$value"
+        }
+
     }
 
-}
+    # Get all my github repos
+    Function Get-MyRepos {
+        $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
+        Set-Location ${Convert-Path ~/repos}
+        $MyRepos | ForEach-Object {git clone $_.git_url}
+    }
 
-# Get all my github repos
-Function Get-MyRepos {
-    $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
-    Set-Location ${Convert-Path ~/repos}
-    $MyRepos | ForEach-Object {git clone $_.git_url}
-}
-
-# My local files in a bare git repo
-Function dotgit {
+    # My local files in a bare git repo
+    Function dotgit {
     if  ($isLinux){
     }
     else {
@@ -489,6 +487,24 @@ Function clone-dotgit {
         if ($Force -or $PSCmdlet.ShouldProcess($tmpdir,'Remove files')){
             Remove-Item -Path $tmpdir -Recurse
         }
+    }
+}
+
+# Store emacs and org-files in a local repository and not in Onedrive
+Function orgit {
+    if  ($isLinux){
+    }
+    else {
+        $gitdir = Join-Path ${env:USERPROFILE} ".orgit"
+        $workdir = Join-Path ${env:USERPROFILE} Onedrive/emacs
+        $cmd = Get-Command git.exe
+
+        $options = @(
+            "--git-dir=${gitdir}"
+            "--work-tree=${workdir}"
+        )
+        Write-Verbose "$cmd @options $args"
+        & $cmd @options $args
     }
 }
 
