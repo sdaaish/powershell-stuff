@@ -16,6 +16,7 @@ $Host.UI.RawUI.BufferSize.height=5000
 # Oh-my-PoSH https://ohmyposh.dev/docs/upgrading/
 $Theme = Join-Path ${env:USERPROFILE} ".config\oh-my-posh\my-posh-theme.omp.json"
 oh-my-posh.exe --init --shell pwsh --config $Theme | Invoke-Expression
+Enable-PoshTransientPrompt
 
 $ColorTheme = Join-Path ${env:UserProfile} ".config\ColorThemes\MyColorTheme.psd1"
 Add-TerminalIconsColorTheme -Path $ColorTheme -Force
