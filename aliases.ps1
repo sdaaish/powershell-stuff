@@ -583,9 +583,21 @@ function pse {
     Write-Host "Explorer restarted"
 }
 
-# show top 10 processes regarding cpu usage
+# show top n processes regarding cpu usage
 Function top {
-    Get-Process| ? cpu -gt 5|Sort-Object cpu -Descending| Select-Object -First 10
+    param(
+        [ValidateSet("Process","Memory")]
+        [string]$Option = "Process"
+    )
+    switch ($option) {
+        "Memory"  {$sort = "TotalMemory (M)"}
+        default  {$sort = "CPU"}
+    }
+    Get-Process|
+      Select-Object -Property Id, ProcessName,
+    @{name="CPU";expression={($_.CPU).ToString("#") -as [int]}},
+    @{name="TotalMemory (M)";expression={($_.VM + $_.PM) / 1MB -as [int]}},
+    Handles| Sort-Object -Property $sort -Descending -Top 20|Format-Table -Auto
 }
 
 # Show filehash for all executables running
