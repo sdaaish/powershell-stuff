@@ -102,7 +102,7 @@ function ll {
         $Path
     )
 
-        Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S
+    Get-ChildItem $Path -Attributes H,!H,A,!A,S,!S
 }
 
 function lla {
@@ -321,37 +321,37 @@ function org-commit {
     Pop-Location
 }
 
-    # Check for admin
-    function Test-Admin
-    {
-        $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-        $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
-        $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-        $prp.IsInRole($adm)
-    }
+# Check for admin
+function Test-Admin
+{
+    $wid = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $prp = New-Object System.Security.Principal.WindowsPrincipal($wid)
+    $adm = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+    $prp.IsInRole($adm)
+}
 
-    # Alias for git status
-    Function Get-MyGitStatus {
-        git status -sb
+# Alias for git status
+Function Get-MyGitStatus {
+    git status -sb
+}
+# Alias for git log
+Function Get-MyGitLog {
+    param(
+        $path = ".",
+        $count = 40
+    )
+    $path = Convert-Path $path
+    if ( Test-Path $path -Type Leaf){
+        $path=Split-Path $path -Parent
     }
-    # Alias for git log
-    Function Get-MyGitLog {
-        param(
-            $path = ".",
-            $count = 40
-        )
-        $path = Convert-Path $path
-        if ( Test-Path $path -Type Leaf){
-            $path=Split-Path $path -Parent
-        }
-        git -C $path log --oneline --all --graph --decorate --max-count=$count
-    }
+    git -C $path log --oneline --all --graph --decorate --max-count=$count
+}
 
-    # Create a .gitattributes-file if it doesnt exist
-    function Add-GitAttributesFile {
+# Create a .gitattributes-file if it doesnt exist
+function Add-GitAttributesFile {
 
-        # Text to add in the file
-        $text = @"
+    # Text to add in the file
+    $text = @"
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
 
@@ -371,59 +371,59 @@ function org-commit {
 *.jpg binary
 "@
 
-        if (Test-Path -Path .git -PathType Container) {
-            if (-not (Test-Path -Path .gitattributes -PathType Leaf)){
-                Set-Content -Path .gitattributes -Value $text
-                Write-Output "Added a new .gitattributesfile"
-            }
-            else {
-                Write-Output "A .gitattributesfile already exists."
-            }
+    if (Test-Path -Path .git -PathType Container) {
+        if (-not (Test-Path -Path .gitattributes -PathType Leaf)){
+            Set-Content -Path .gitattributes -Value $text
+            Write-Output "Added a new .gitattributesfile"
         }
         else {
-            Write-Output "Not a repository."
+            Write-Output "A .gitattributesfile already exists."
         }
     }
-
-    # Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
-    function fix-tty {
-        $console.ForegroundColor = "white"
-        $console.BackgroundColor = "black"
-        Clear-Host
+    else {
+        Write-Output "Not a repository."
     }
-    function keybase {
-        $prg = $env:LocalAppData + "\Keybase\keybase.exe"
-        & $prg $args
+}
+
+# Reset the terminal settings. From http://windowsitpro.com/powershell/powershell-basics-console-configuration
+function fix-tty {
+    $console.ForegroundColor = "white"
+    $console.BackgroundColor = "black"
+    Clear-Host
+}
+function keybase {
+    $prg = $env:LocalAppData + "\Keybase\keybase.exe"
+    & $prg $args
+}
+# Checks for proxy settings
+function Get-proxy {
+    $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
+    $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
+    $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
+
+    if ( $proxyenabled -eq 0) {
+        Write-Host "No proxy enabled"
     }
-    # Checks for proxy settings
-    function Get-proxy {
-        $regKey="HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings"
-        $proxysettings="ProxyEnable","ProxyServer","ProxyOverride","AutoConfigURL"
-        $proxyenabled= (Get-ItemProperty -path $regKey).ProxyEnable
-
-        if ( $proxyenabled -eq 0) {
-            Write-Host "No proxy enabled"
-        }
-        else {
-            Write-Host "Proxy enabled"
-        }
-
-        foreach ($setting in $proxysettings) {
-            $value = (Get-ItemProperty -path $regKey).$setting
-            "$setting is:`t$value"
-        }
-
+    else {
+        Write-Host "Proxy enabled"
     }
 
-    # Get all my github repos
-    Function Get-MyRepos {
-        $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
-        Set-Location ${Convert-Path ~/repos}
-        $MyRepos | ForEach-Object {git clone $_.git_url}
+    foreach ($setting in $proxysettings) {
+        $value = (Get-ItemProperty -path $regKey).$setting
+        "$setting is:`t$value"
     }
 
-    # My local files in a bare git repo
-    Function dotgit {
+}
+
+# Get all my github repos
+Function Get-MyRepos {
+    $MyRepos = Invoke-RestMethod -Uri "https://api.github.com/users/sdaaish"
+    Set-Location ${Convert-Path ~/repos}
+    $MyRepos | ForEach-Object {git clone $_.git_url}
+}
+
+# My local files in a bare git repo
+Function dotgit {
     if  ($isLinux){
     }
     else {
@@ -825,14 +825,14 @@ Function Ignore-SelfSignedCerts {
     try {
         Write-Host "Adding TrustAllCertsPolicy type." -ForegroundColor White
         Add-Type -TypeDefinition  @"
-          using System.Net;
-          using System.Security.Cryptography.X509Certificates;
-          public class TrustAllCertsPolicy : ICertificatePolicy {
-              public bool CheckValidationResult(
-                ServicePoint srvPoint, X509Certificate certificate,WebRequest request, int certificateProblem) {
-                  return true
-                }
-          }
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+public class TrustAllCertsPolicy : ICertificatePolicy {
+    public bool CheckValidationResult(
+        ServicePoint srvPoint, X509Certificate certificate,WebRequest request, int certificateProblem) {
+            return true
+        }
+}
 "@
 
         Write-Host "TrustAllCertsPolicy type added." -ForegroundColor White
