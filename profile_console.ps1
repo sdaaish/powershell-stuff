@@ -27,3 +27,4 @@ Set-TerminalIconsTheme -ColorTheme MyColorTheme
 #Clear-Host
 Write-Output "Hello ($name)!"
 
+"Time taken {0} ms." -f ((Get-Date) - ($starttime)).MilliSeconds
