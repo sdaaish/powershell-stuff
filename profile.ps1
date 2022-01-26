@@ -58,3 +58,4 @@ $env:PSModulePath = Set-LocalModulePath
 
 # Import aliases
 . $DirScripts\aliases.ps1
+"Time taken {0} ms." -f ((Get-Date) - ($starttime)).MilliSeconds
